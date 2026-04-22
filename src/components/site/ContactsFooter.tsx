@@ -76,16 +76,31 @@ const ContactsFooter = () => {
             </div>
           </div>
 
-          <div className="mb-20 rounded-3xl overflow-hidden border border-[hsl(var(--cream))]/20">
-            <iframe
-              title="Карта — г. Иваново, ул. Зелёная, д. 19В"
-              src="https://yandex.ru/map-widget/v1/?ll=40.948929%2C57.006451&mode=search&text=%D0%98%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%20%D1%83%D0%BB.%20%D0%97%D0%B5%D0%BB%D1%91%D0%BD%D0%B0%D1%8F%2019%D0%92&z=16"
-              width="100%"
-              height="440"
-              frameBorder="0"
-              allowFullScreen
-              className="block w-full"
-            />
+          <div className="mb-20">
+            <div className="rounded-3xl overflow-hidden border border-[hsl(var(--cream))]/20">
+              <iframe
+                title="Карта — г. Иваново, ул. Зелёная, д. 19В"
+                src="https://yandex.ru/map-widget/v1/?ll=40.948929%2C57.006451&mode=search&text=%D0%98%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%20%D1%83%D0%BB.%20%D0%97%D0%B5%D0%BB%D1%91%D0%BD%D0%B0%D1%8F%2019%D0%92&z=16"
+                width="100%"
+                height="440"
+                frameBorder="0"
+                allowFullScreen
+                className="block w-full"
+              />
+            </div>
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
+              <div className="text-sm opacity-70">Приезжайте к нам на склад или закажите доставку в любой регион.</div>
+              <a
+                href="https://yandex.ru/maps/?rtext=~57.006451,40.948929&rtt=auto"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button size="lg" className="rounded-full bg-[hsl(var(--lime))] hover:bg-[hsl(var(--lime))]/90 text-[hsl(var(--forest))] h-14 px-8">
+                  <Icon name="Navigation" size={18} />
+                  Построить маршрут
+                </Button>
+              </a>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-12 gap-10 items-start">
