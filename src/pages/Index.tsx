@@ -9,6 +9,7 @@ const nav = [
   { id: 'catalog', label: 'Каталог' },
   { id: 'prices', label: 'Прайс-листы' },
   { id: 'materials', label: 'Материалы' },
+  { id: 'partners', label: 'Партнёры' },
   { id: 'about', label: 'О магазине' },
   { id: 'contacts', label: 'Контакты' },
 ];
@@ -75,6 +76,17 @@ const materials = [
   { icon: 'Sprout', title: 'Нормы высева по культурам', desc: 'Таблицы для разных регионов России' },
   { icon: 'FileText', title: 'Сертификаты качества', desc: 'ГОСТ, органик, сортовая чистота' },
   { icon: 'Leaf', title: 'Календарь садовода', desc: 'Что и когда сеять в открытый грунт' },
+];
+
+const partners = [
+  { name: 'Русское Поле', type: 'Агрохолдинг', since: '2015' },
+  { name: 'Поиск', type: 'Селекционная станция', since: '2011' },
+  { name: 'Гавриш', type: 'Селекция и семеноводство', since: '2012' },
+  { name: 'Аэлита', type: 'Производитель семян', since: '2014' },
+  { name: 'СеДеК', type: 'Агрофирма', since: '2016' },
+  { name: 'Биотехника', type: 'Научное объединение', since: '2018' },
+  { name: 'Nunhems', type: 'Международный бренд', since: '2019' },
+  { name: 'Rijk Zwaan', type: 'Селекционный дом', since: '2020' },
 ];
 
 const Index = () => {
@@ -327,6 +339,52 @@ const Index = () => {
               <p className="text-sm opacity-70">{m.desc}</p>
             </Card>
           ))}
+        </div>
+      </section>
+
+      <section id="partners" className="container pb-24 lg:pb-32">
+        <div className="flex items-end justify-between mb-12">
+          <div>
+            <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--earth))] mb-3">05 — Партнёрство</div>
+            <h2 className="font-display text-5xl lg:text-6xl">Наши партнёры</h2>
+          </div>
+          <div className="hidden md:block text-sm text-muted-foreground max-w-xs">
+            Работаем напрямую с селекционными станциями и проверенными производителями семян.
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-border/60 rounded-3xl overflow-hidden border border-border/60">
+          {partners.map((p, i) => (
+            <div
+              key={i}
+              className="bg-card p-8 flex flex-col justify-between min-h-[180px] group hover:bg-[hsl(var(--forest))] hover:text-[hsl(var(--cream))] transition-colors cursor-pointer"
+            >
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-full bg-[hsl(var(--lime))]/30 grid place-items-center group-hover:bg-[hsl(var(--lime))]/20">
+                  <Icon name="Sprout" size={18} className="text-[hsl(var(--forest))] group-hover:text-[hsl(var(--lime))]" />
+                </div>
+                <span className="text-[10px] uppercase tracking-wider opacity-60">с {p.since}</span>
+              </div>
+              <div>
+                <div className="font-display text-2xl leading-tight mb-1">{p.name}</div>
+                <div className="text-xs opacity-70">{p.type}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-10 p-8 rounded-3xl bg-[hsl(var(--lime))]/20 border border-[hsl(var(--lime))]/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex items-start gap-4">
+            <Icon name="Handshake" size={28} className="text-[hsl(var(--forest))] shrink-0 mt-1" />
+            <div>
+              <div className="font-display text-2xl mb-1">Станьте нашим партнёром</div>
+              <div className="text-sm text-muted-foreground max-w-xl">Открыты к сотрудничеству с селекционными станциями, агрохолдингами и оптовыми дистрибьюторами.</div>
+            </div>
+          </div>
+          <Button className="rounded-full bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))] h-12 px-6 shrink-0">
+            Предложить сотрудничество
+            <Icon name="ArrowRight" size={16} />
+          </Button>
         </div>
       </section>
 
