@@ -214,7 +214,7 @@ const NewsAdmin = ({ token }: { token: string }) => {
 
 const CatalogAdmin = ({ token }: { token: string }) => {
   const [items, setItems] = useState<CatalogItem[]>([]);
-  const [editing, setEditing] = useState<CatalogItem | null>(null);
+  const [editing, setEditing] = useState<(CatalogItem & { imgBase64?: string; imgFilename?: string; imgContentType?: string }) | null>(null);
   const [loading, setLoading] = useState(false);
 
   const load = async () => {
@@ -225,21 +225,35 @@ const CatalogAdmin = ({ token }: { token: string }) => {
 
   useEffect(() => { load(); }, []);
 
+  const onImgFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const base64 = result.split(',')[1];
+      setEditing((prev) => prev ? { ...prev, imgBase64: base64, imgFilename: file.name, imgContentType: file.type, img: result } : prev);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const save = async () => {
     if (!editing) return;
     setLoading(true);
     try {
+      const payload = { ...editing };
+      if (payload.imgBase64 && payload.img?.startsWith('data:')) {
+        payload.img = '';
+      }
       const res = await fetch(CATALOG_URL, {
         method: editing.id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token },
-        body: JSON.stringify(editing),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('Ошибка');
       toast({ title: 'Сохранено' });
       setEditing(null);
       await load();
     } catch (err) {
-      toast({ title: 'Ошибка', variant: 'destructive' });
+      toast({ title: 'Ошибка', description: err instanceof Error ? err.message : '', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -273,7 +287,25 @@ const CatalogAdmin = ({ token }: { token: string }) => {
             <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Количество сортов</label><Input type="number" value={editing.count} onChange={(e) => setEditing({ ...editing, count: Number(e.target.value) })} /></div>
             <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Порядок</label><Input type="number" value={editing.sort || 0} onChange={(e) => setEditing({ ...editing, sort: Number(e.target.value) })} /></div>
           </div>
-          <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Ссылка на картинку</label><Input value={editing.img} onChange={(e) => setEditing({ ...editing, img: e.target.value })} placeholder="https://..." /></div>
+          <div>
+            <label className="text-xs uppercase text-muted-foreground mb-1 block">Картинка категории</label>
+            {editing.img && (
+              <div className="mb-3 aspect-[4/3] rounded-xl overflow-hidden max-w-xs border border-border/60">
+                <img src={editing.img} alt="превью" className="w-full h-full object-cover" />
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) onImgFile(f); }}
+              className="block w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:bg-[hsl(var(--forest))] file:text-[hsl(var(--cream))] file:cursor-pointer mb-2"
+            />
+            <Input
+              value={editing.imgBase64 ? '' : editing.img}
+              onChange={(e) => setEditing({ ...editing, img: e.target.value, imgBase64: undefined, imgFilename: undefined, imgContentType: undefined })}
+              placeholder="или вставьте ссылку https://..."
+            />
+          </div>
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Сорта (через запятую)</label><Textarea rows={2} value={editing.items} onChange={(e) => setEditing({ ...editing, items: e.target.value })} placeholder="Томаты, Огурцы, Перец" /></div>
           <div className="flex gap-3">
             <Button onClick={save} disabled={loading} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">{loading ? 'Сохраняем...' : 'Сохранить'}</Button>

@@ -1,7 +1,10 @@
 import json
 import os
+import base64
+import re
 from datetime import datetime
 import psycopg2
+import boto3
 
 CORS_HEADERS = {
     'Access-Control-Allow-Origin': '*',
@@ -12,7 +15,7 @@ CORS_HEADERS = {
 
 
 def handler(event, context):
-    """CRUD для каталога товаров: категории с фото и списком сортов."""
+    """CRUD для каталога товаров: категории с фото (upload или URL) и списком сортов."""
     method = event.get('httpMethod', 'GET')
     if method == 'OPTIONS':
         return {'statusCode': 200, 'headers': CORS_HEADERS, 'body': ''}
@@ -39,6 +42,7 @@ def handler(event, context):
             return _json(401, {'error': 'unauthorized'})
 
         body = json.loads(event.get('body') or '{}')
+        img_url = _resolve_img(body)
 
         if method == 'POST':
             items_str = body.get('items', '')
@@ -50,12 +54,12 @@ def handler(event, context):
                        VALUES (%s, %s, %s, %s, %s) RETURNING id""",
                     (
                         body.get('name', ''), int(body.get('count') or 0),
-                        body.get('img', ''), items_str, int(body.get('sort') or 0),
+                        img_url, items_str, int(body.get('sort') or 0),
                     ),
                 )
                 new_id = cur.fetchone()[0]
                 conn.commit()
-            return _json(200, {'id': new_id})
+            return _json(200, {'id': new_id, 'img': img_url})
 
         if method == 'PUT':
             item_id = body.get('id')
@@ -70,12 +74,12 @@ def handler(event, context):
                        WHERE id=%s""",
                     (
                         body.get('name', ''), int(body.get('count') or 0),
-                        body.get('img', ''), items_str, int(body.get('sort') or 0),
+                        img_url, items_str, int(body.get('sort') or 0),
                         int(item_id),
                     ),
                 )
                 conn.commit()
-            return _json(200, {'ok': True})
+            return _json(200, {'ok': True, 'img': img_url})
 
         if method == 'DELETE':
             item_id = body.get('id') or (event.get('queryStringParameters') or {}).get('id')
@@ -89,6 +93,38 @@ def handler(event, context):
         return _json(405, {'error': 'Method Not Allowed'})
     finally:
         conn.close()
+
+
+def _resolve_img(body):
+    img_b64 = body.get('imgBase64')
+    if img_b64:
+        filename = body.get('imgFilename') or 'cover.jpg'
+        safe_name = re.sub(r'[^A-Za-z0-9._-]+', '_', filename)
+        key = f'catalog/{int(datetime.utcnow().timestamp())}_{safe_name}'
+        raw = base64.b64decode(img_b64)
+        ctype = body.get('imgContentType') or _guess_ct(safe_name)
+        s3 = boto3.client(
+            's3',
+            endpoint_url='https://bucket.poehali.dev',
+            aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+        )
+        s3.put_object(Bucket='files', Key=key, Body=raw, ContentType=ctype)
+        return f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}"
+    return body.get('img', '')
+
+
+def _guess_ct(filename):
+    low = filename.lower()
+    if low.endswith('.png'):
+        return 'image/png'
+    if low.endswith('.webp'):
+        return 'image/webp'
+    if low.endswith('.gif'):
+        return 'image/gif'
+    if low.endswith('.svg'):
+        return 'image/svg+xml'
+    return 'image/jpeg'
 
 
 def _check_auth(event, conn):
