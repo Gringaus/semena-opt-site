@@ -8,12 +8,12 @@ import {
   news as newsFallback,
   catalog as catalogFallback,
   prices as pricesFallback,
-  materials,
   partners,
   NEWS_API_URL,
   CATALOG_API_URL,
   PRICES_API_URL,
 } from './data';
+import { faqCategories } from './faq';
 
 interface NewsApi { id?: number; slug: string; date: string; tag: string; title: string; text: string; content?: string[]; image?: string }
 interface CatalogApi { id?: number; name: string; count: number; img: string; items: string[] }
@@ -171,16 +171,42 @@ const ContentSections = () => {
       </section>
 
       <section id="materials" className="container pb-24 lg:pb-32">
-        <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--earth))] mb-3">04 — База знаний</div>
-        <h2 className="font-display text-5xl lg:text-6xl mb-12">Дополнительные материалы</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {materials.map((m, i) => (
-            <Card key={i} className="p-7 rounded-3xl border-border/60 bg-card hover:bg-[hsl(var(--forest))] hover:text-[hsl(var(--cream))] transition-all cursor-pointer group h-full">
-              <Icon name={m.icon} size={36} className="mb-8 text-[hsl(var(--earth))] group-hover:text-[hsl(var(--lime))]" />
-              <h3 className="font-display text-2xl mb-2">{m.title}</h3>
-              <p className="text-sm opacity-70">{m.desc}</p>
-            </Card>
+        <div className="flex items-end justify-between mb-12 gap-6">
+          <div>
+            <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--earth))] mb-3">04 — FAQ</div>
+            <h2 className="font-display text-5xl lg:text-6xl">Вопросы и ответы</h2>
+          </div>
+          <div className="hidden md:block text-sm text-muted-foreground max-w-xs">
+            Подобрали ответы на вопросы, которые нам задают чаще всего — по огурцам, томатам и зелени.
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          {faqCategories.map((cat) => (
+            <Link key={cat.id} to="/faq" className="block h-full">
+              <Card className="p-7 rounded-3xl border-border/60 bg-card hover:bg-[hsl(var(--forest))] hover:text-[hsl(var(--cream))] transition-all cursor-pointer group h-full">
+                <div className="w-14 h-14 rounded-full bg-[hsl(var(--lime))]/30 grid place-items-center mb-6 group-hover:bg-[hsl(var(--lime))]/20">
+                  <Icon name={cat.icon} size={24} className="text-[hsl(var(--forest))] group-hover:text-[hsl(var(--lime))]" />
+                </div>
+                <h3 className="font-display text-2xl mb-2">{cat.title}</h3>
+                <p className="text-sm opacity-70 mb-6">
+                  {cat.items.length} {cat.items.length === 1 ? 'вопрос' : cat.items.length < 5 ? 'вопроса' : 'вопросов'} с подробными ответами
+                </p>
+                <div className="flex items-center gap-2 text-sm font-medium group-hover:gap-3 transition-all">
+                  Читать ответы <Icon name="ArrowUpRight" size={16} />
+                </div>
+              </Card>
+            </Link>
           ))}
+        </div>
+
+        <div className="flex justify-center">
+          <Link to="/faq">
+            <Button size="lg" variant="outline" className="rounded-full h-14 px-8 border-foreground/20">
+              Все вопросы и ответы
+              <Icon name="ArrowRight" size={18} />
+            </Button>
+          </Link>
         </div>
       </section>
 

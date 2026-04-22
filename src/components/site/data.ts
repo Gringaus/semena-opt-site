@@ -8,7 +8,7 @@ export const nav = [
   { id: 'news', label: 'Новости' },
   { id: 'catalog', label: 'Каталог' },
   { id: 'prices', label: 'Прайс-листы' },
-  { id: 'materials', label: 'Материалы' },
+  { id: 'materials', label: 'Вопросы-ответы' },
   { id: 'partners', label: 'Партнёры' },
   { id: 'about', label: 'О магазине' },
   { id: 'contacts', label: 'Контакты' },
