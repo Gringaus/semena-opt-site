@@ -169,7 +169,7 @@ const ContentSections = () => {
           <div>
             <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--earth))] mb-3">05 — О нас</div>
             <h2 className="font-display text-5xl lg:text-6xl leading-[0.95] mb-8">
-              17 лет <em className="text-[hsl(var(--earth))]">растём</em> <br />вместе с фермерами.
+              20 лет <em className="text-[hsl(var(--earth))]">растём</em> <br />вместе с фермерами.
             </h2>
             <div className="space-y-5 text-base lg:text-lg text-muted-foreground leading-relaxed mb-10">
               <p>
@@ -187,12 +187,12 @@ const ContentSections = () => {
             </div>
             <div className="grid grid-cols-3 gap-8 border-t border-border/60 pt-8">
               <div>
-                <div className="font-display text-5xl text-[hsl(var(--forest))]">17</div>
+                <div className="font-display text-5xl text-[hsl(var(--forest))]">20</div>
                 <div className="text-xs uppercase tracking-wider text-muted-foreground mt-2">лет на рынке</div>
               </div>
               <div>
-                <div className="font-display text-5xl text-[hsl(var(--forest))]">3</div>
-                <div className="text-xs uppercase tracking-wider text-muted-foreground mt-2">склада</div>
+                <div className="font-display text-3xl lg:text-4xl text-[hsl(var(--forest))] leading-tight">Центр<br />города</div>
+                <div className="text-xs uppercase tracking-wider text-muted-foreground mt-2">склад</div>
               </div>
               <div>
                 <div className="font-display text-5xl text-[hsl(var(--forest))]">4.2k</div>
