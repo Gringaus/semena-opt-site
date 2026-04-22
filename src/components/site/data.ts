@@ -137,7 +137,14 @@ export const materials = [
   { icon: 'Leaf', title: 'Календарь садовода', desc: 'Что и когда сеять в открытый грунт' },
 ];
 
-export const partners = [
+const partnerLogos = [
+  'https://cdn.poehali.dev/projects/6e30ca34-8fe1-4535-8d16-622fe38c58fb/files/ed2e2d7a-309d-41c7-ad45-0b30ec695cf2.jpg',
+  'https://cdn.poehali.dev/projects/6e30ca34-8fe1-4535-8d16-622fe38c58fb/files/fdf769d4-cf7c-44e8-b836-ad532d36d83e.jpg',
+  'https://cdn.poehali.dev/projects/6e30ca34-8fe1-4535-8d16-622fe38c58fb/files/c3318279-333d-4c65-b7cd-78200b3780d0.jpg',
+  'https://cdn.poehali.dev/projects/6e30ca34-8fe1-4535-8d16-622fe38c58fb/files/1261ca05-a304-4d88-b400-02e509b88e6e.jpg',
+];
+
+const partnerNames = [
   'Агрофирма «Партнёр»',
   'Агрохолдинг «Поиск»',
   'Фирма «Joy»',
@@ -163,3 +170,8 @@ export const partners = [
   'Грин Белт',
   'Ваше хозяйство',
 ];
+
+export const partners = partnerNames.map((name, i) => ({
+  name,
+  logo: partnerLogos[i % partnerLogos.length],
+}));

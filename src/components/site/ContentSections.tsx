@@ -152,10 +152,10 @@ const ContentSections = () => {
               key={i}
               className="bg-card px-6 py-8 flex items-center gap-4 min-h-[110px]"
             >
-              <div className="w-10 h-10 rounded-full bg-[hsl(var(--lime))]/30 grid place-items-center shrink-0">
-                <Icon name="Sprout" size={18} className="text-[hsl(var(--forest))]" />
+              <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-border/60 bg-[hsl(var(--cream))]">
+                <img src={p.logo} alt={p.name} className="w-full h-full object-cover" />
               </div>
-              <div className="font-display text-lg leading-tight">{p}</div>
+              <div className="font-display text-lg leading-tight">{p.name}</div>
             </div>
           ))}
         </div>
