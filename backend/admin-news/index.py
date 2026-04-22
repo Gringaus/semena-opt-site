@@ -1,8 +1,10 @@
 import json
 import os
 import re
+import base64
 from datetime import datetime
 import psycopg2
+import boto3
 
 CORS_HEADERS = {
     'Access-Control-Allow-Origin': '*',
@@ -23,7 +25,7 @@ def handler(event, context):
         if method == 'GET':
             with conn.cursor() as cur:
                 cur.execute(
-                    "SELECT id, slug, date_label, tag, title, text, content, published FROM news ORDER BY id DESC"
+                    "SELECT id, slug, date_label, tag, title, text, content, image, published FROM news ORDER BY id DESC"
                 )
                 rows = cur.fetchall()
             data = [
@@ -31,7 +33,7 @@ def handler(event, context):
                     'id': r[0], 'slug': r[1], 'date': r[2], 'tag': r[3],
                     'title': r[4], 'text': r[5],
                     'content': [p for p in (r[6] or '').split('\n\n') if p.strip()],
-                    'published': r[7],
+                    'image': r[7], 'published': r[8],
                 }
                 for r in rows
             ]
@@ -41,22 +43,23 @@ def handler(event, context):
             return _json(401, {'error': 'unauthorized'})
 
         body = json.loads(event.get('body') or '{}')
+        image_url = _resolve_img(body)
 
         if method == 'POST':
             slug = body.get('slug') or _slugify(body.get('title', ''))
             with conn.cursor() as cur:
                 cur.execute(
-                    """INSERT INTO news (slug, date_label, tag, title, text, content, published)
-                       VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id""",
+                    """INSERT INTO news (slug, date_label, tag, title, text, content, image, published)
+                       VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id""",
                     (
                         slug, body.get('date', ''), body.get('tag', 'Новость'),
                         body.get('title', ''), body.get('text', ''),
-                        body.get('content', ''), bool(body.get('published', True)),
+                        body.get('content', ''), image_url, bool(body.get('published', True)),
                     ),
                 )
                 new_id = cur.fetchone()[0]
                 conn.commit()
-            return _json(200, {'id': new_id})
+            return _json(200, {'id': new_id, 'image': image_url})
 
         if method == 'PUT':
             item_id = body.get('id')
@@ -65,16 +68,16 @@ def handler(event, context):
             with conn.cursor() as cur:
                 cur.execute(
                     """UPDATE news SET slug=%s, date_label=%s, tag=%s, title=%s, text=%s,
-                       content=%s, published=%s WHERE id=%s""",
+                       content=%s, image=%s, published=%s WHERE id=%s""",
                     (
                         body.get('slug', ''), body.get('date', ''), body.get('tag', 'Новость'),
                         body.get('title', ''), body.get('text', ''),
-                        body.get('content', ''), bool(body.get('published', True)),
+                        body.get('content', ''), image_url, bool(body.get('published', True)),
                         int(item_id),
                     ),
                 )
                 conn.commit()
-            return _json(200, {'ok': True})
+            return _json(200, {'ok': True, 'image': image_url})
 
         if method == 'DELETE':
             item_id = body.get('id') or (event.get('queryStringParameters') or {}).get('id')
@@ -88,6 +91,38 @@ def handler(event, context):
         return _json(405, {'error': 'Method Not Allowed'})
     finally:
         conn.close()
+
+
+def _resolve_img(body):
+    img_b64 = body.get('imageBase64')
+    if img_b64:
+        filename = body.get('imageFilename') or 'news.jpg'
+        safe_name = re.sub(r'[^A-Za-z0-9._-]+', '_', filename)
+        key = f'news/{int(datetime.utcnow().timestamp())}_{safe_name}'
+        raw = base64.b64decode(img_b64)
+        ctype = body.get('imageContentType') or _guess_ct(safe_name)
+        s3 = boto3.client(
+            's3',
+            endpoint_url='https://bucket.poehali.dev',
+            aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+            aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+        )
+        s3.put_object(Bucket='files', Key=key, Body=raw, ContentType=ctype)
+        return f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}"
+    return body.get('image', '')
+
+
+def _guess_ct(filename):
+    low = filename.lower()
+    if low.endswith('.png'):
+        return 'image/png'
+    if low.endswith('.webp'):
+        return 'image/webp'
+    if low.endswith('.gif'):
+        return 'image/gif'
+    if low.endswith('.svg'):
+        return 'image/svg+xml'
+    return 'image/jpeg'
 
 
 def _check_auth(event, conn):

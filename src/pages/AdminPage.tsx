@@ -15,7 +15,7 @@ const PRICES_URL = 'https://functions.poehali.dev/e8b0609f-fa31-42bd-bba6-84527f
 
 type Tab = 'news' | 'catalog' | 'prices';
 
-interface NewsItem { id?: number; slug?: string; date: string; tag: string; title: string; text: string; content: string; published?: boolean }
+interface NewsItem { id?: number; slug?: string; date: string; tag: string; title: string; text: string; content: string; image?: string; imageBase64?: string; imageFilename?: string; imageContentType?: string; published?: boolean }
 interface CatalogItem { id?: number; name: string; count: number; img: string; items: string; sort?: number }
 interface PriceItem { id: number; name: string; size: string; date: string; url: string }
 
@@ -133,14 +133,28 @@ const NewsAdmin = ({ token }: { token: string }) => {
 
   useEffect(() => { load(); }, []);
 
+  const onNewsImg = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      const base64 = result.split(',')[1];
+      setEditing((prev) => prev ? { ...prev, imageBase64: base64, imageFilename: file.name, imageContentType: file.type, image: result } : prev);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const save = async () => {
     if (!editing) return;
     setLoading(true);
     try {
+      const payload = { ...editing };
+      if (payload.imageBase64 && payload.image?.startsWith('data:')) {
+        payload.image = '';
+      }
       const res = await fetch(NEWS_URL, {
         method: editing.id ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token },
-        body: JSON.stringify(editing),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error('Ошибка сохранения');
       toast({ title: 'Сохранено' });
@@ -168,7 +182,7 @@ const NewsAdmin = ({ token }: { token: string }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="font-display text-3xl">Новости ({items.length})</h2>
-        <Button onClick={() => setEditing({ date: '', tag: 'Новость', title: '', text: '', content: '', published: true })} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
+        <Button onClick={() => setEditing({ date: '', tag: 'Новость', title: '', text: '', content: '', image: '', published: true })} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
           <Icon name="Plus" size={16} /> Добавить
         </Button>
       </div>
@@ -183,6 +197,25 @@ const NewsAdmin = ({ token }: { token: string }) => {
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Заголовок</label><Input value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} /></div>
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Краткое описание</label><Textarea rows={2} value={editing.text} onChange={(e) => setEditing({ ...editing, text: e.target.value })} /></div>
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Полный текст (абзацы через пустую строку)</label><Textarea rows={8} value={editing.content} onChange={(e) => setEditing({ ...editing, content: e.target.value })} /></div>
+          <div>
+            <label className="text-xs uppercase text-muted-foreground mb-1 block">Главная картинка</label>
+            {editing.image && (
+              <div className="mb-3 aspect-[16/9] rounded-xl overflow-hidden max-w-md border border-border/60">
+                <img src={editing.image} alt="превью" className="w-full h-full object-cover" />
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) onNewsImg(f); }}
+              className="block w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:bg-[hsl(var(--forest))] file:text-[hsl(var(--cream))] file:cursor-pointer mb-2"
+            />
+            <Input
+              value={editing.imageBase64 ? '' : (editing.image || '')}
+              onChange={(e) => setEditing({ ...editing, image: e.target.value, imageBase64: undefined, imageFilename: undefined, imageContentType: undefined })}
+              placeholder="или вставьте ссылку https://..."
+            />
+          </div>
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Slug (для URL, опционально)</label><Input value={editing.slug || ''} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="авто-генерация если пусто" /></div>
           <div className="flex gap-3">
             <Button onClick={save} disabled={loading} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">

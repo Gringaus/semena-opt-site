@@ -15,7 +15,7 @@ import {
   PRICES_API_URL,
 } from './data';
 
-interface NewsApi { id?: number; slug: string; date: string; tag: string; title: string; text: string; content?: string[] }
+interface NewsApi { id?: number; slug: string; date: string; tag: string; title: string; text: string; content?: string[]; image?: string }
 interface CatalogApi { id?: number; name: string; count: number; img: string; items: string[] }
 interface PriceApi { id?: number; name: string; size: string; date: string; url?: string }
 
@@ -55,17 +55,24 @@ const ContentSections = () => {
         <div className="grid md:grid-cols-3 gap-6">
           {news.map((n, i) => (
             <Link key={i} to={`/news/${n.slug}`} className="block h-full">
-              <Card className="p-7 rounded-3xl border-border/60 hover:shadow-xl transition-all hover:-translate-y-1 bg-card group cursor-pointer h-full">
-                <div className="flex items-center justify-between mb-8">
-                  <Badge className={`rounded-full border-0 ${n.tag === 'Поступление' ? 'bg-[hsl(var(--lime))]/30 text-[hsl(var(--forest))]' : 'bg-[hsl(var(--earth))]/20 text-[hsl(var(--earth))]'}`}>
-                    {n.tag}
-                  </Badge>
-                  <span className="text-xs uppercase tracking-wider text-muted-foreground">{n.date}</span>
-                </div>
-                <h3 className="font-display text-2xl leading-tight mb-3">{n.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-6">{n.text}</p>
-                <div className="flex items-center gap-2 text-sm font-medium text-[hsl(var(--forest))] group-hover:gap-3 transition-all">
-                  Читать полностью <Icon name="ArrowUpRight" size={16} />
+              <Card className="rounded-3xl border-border/60 hover:shadow-xl transition-all hover:-translate-y-1 bg-card group cursor-pointer h-full overflow-hidden flex flex-col">
+                {n.image && (
+                  <div className="aspect-[16/10] overflow-hidden">
+                    <img src={n.image} alt={n.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  </div>
+                )}
+                <div className="p-7 flex-1 flex flex-col">
+                  <div className="flex items-center justify-between mb-6">
+                    <Badge className={`rounded-full border-0 ${n.tag === 'Поступление' ? 'bg-[hsl(var(--lime))]/30 text-[hsl(var(--forest))]' : 'bg-[hsl(var(--earth))]/20 text-[hsl(var(--earth))]'}`}>
+                      {n.tag}
+                    </Badge>
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground">{n.date}</span>
+                  </div>
+                  <h3 className="font-display text-2xl leading-tight mb-3">{n.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-6 flex-1">{n.text}</p>
+                  <div className="flex items-center gap-2 text-sm font-medium text-[hsl(var(--forest))] group-hover:gap-3 transition-all">
+                    Читать полностью <Icon name="ArrowUpRight" size={16} />
+                  </div>
                 </div>
               </Card>
             </Link>

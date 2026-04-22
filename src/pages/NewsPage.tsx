@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { news as newsFallback, NEWS_API_URL } from '@/components/site/data';
 
-interface NewsItem { slug: string; date: string; tag: string; title: string; text: string; content?: string[] }
+interface NewsItem { slug: string; date: string; tag: string; title: string; text: string; content?: string[]; image?: string }
 
 const NewsPage = () => {
   const { slug } = useParams();
@@ -67,6 +67,12 @@ const NewsPage = () => {
           </div>
 
           <h1 className="font-display text-4xl lg:text-6xl leading-[1] mb-8">{item.title}</h1>
+
+          {item.image && (
+            <div className="aspect-[16/9] rounded-3xl overflow-hidden mb-10">
+              <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+            </div>
+          )}
 
           <p className="text-xl text-muted-foreground leading-relaxed mb-10 border-l-4 border-[hsl(var(--earth))] pl-6">
             {item.text}
