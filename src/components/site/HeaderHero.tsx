@@ -109,12 +109,6 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
               <p className="mt-8 text-lg text-muted-foreground max-w-xl">
                 Оптовый поставщик семян овощных, цветочных и полевых культур. Более 560 позиций, прямые контракты с селекционными станциями.
               </p>
-              <div className="mt-10 flex flex-wrap gap-3">
-                <Button size="lg" onClick={() => scroll('catalog')} className="rounded-full bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))] h-14 px-8">
-                  Смотреть каталог
-                  <Icon name="ArrowRight" size={18} />
-                </Button>
-              </div>
             </div>
             <div className="lg:col-span-5 relative rise" style={{ animationDelay: '0.15s' }}>
               <div className="aspect-[4/5] rounded-[2rem] overflow-hidden relative shadow-2xl">
