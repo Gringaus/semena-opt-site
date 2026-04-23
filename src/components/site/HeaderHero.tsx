@@ -64,9 +64,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Почта</div>
-                      <a href="mailto:semena.37@mail.ru" className="font-display text-xl block hover:text-[hsl(var(--earth))] transition-colors break-all">
-                        semena.37@mail.ru
-                      </a>
+                      <a href="mailto:semena.37@mail.ru" className="font-display text-xl block hover:text-[hsl(var(--earth))] transition-colors break-all">semena37@mail.ru</a>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
