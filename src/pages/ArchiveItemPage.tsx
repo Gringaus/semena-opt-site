@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { archive as archiveFallback, ARCHIVE_API_URL, CONTACT_API_URL } from '@/components/site/data';
+import SiteLogo from '@/components/site/SiteLogo';
 
 interface ArchiveItem { slug: string; date: string; title: string; content?: string[]; image?: string; images?: string[] }
 
@@ -88,15 +89,7 @@ const ArchiveItemPage = () => {
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/60">
         <div className="container flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-[hsl(var(--forest))] grid place-items-center">
-              <Icon name="Sprout" size={20} className="text-[hsl(var(--lime))]" />
-            </div>
-            <div className="leading-tight">
-              <div className="font-display text-xl font-semibold">Семена Оптом</div>
-              <div className="text-[10px] uppercase tracking-wide text-muted-foreground max-w-[260px]">магазин для юридических лиц и индивидуальных предпринимателей</div>
-            </div>
-          </Link>
+          <SiteLogo to="/" />
           <Link to="/archive">
             <Button variant="outline" className="rounded-full">
               <Icon name="ArrowLeft" size={16} />

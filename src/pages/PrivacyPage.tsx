@@ -1,21 +1,14 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
+import SiteLogo from '@/components/site/SiteLogo';
 
 const PrivacyPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/60">
         <div className="container flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-[hsl(var(--forest))] grid place-items-center">
-              <Icon name="Sprout" size={20} className="text-[hsl(var(--lime))]" />
-            </div>
-            <div className="leading-tight">
-              <div className="font-display text-xl font-semibold">Семена Оптом</div>
-              <div className="text-[10px] uppercase tracking-wide text-muted-foreground max-w-[260px]">магазин для юридических лиц и индивидуальных предпринимателей</div>
-            </div>
-          </Link>
+          <SiteLogo to="/" />
           <Link to="/">
             <Button variant="outline" className="rounded-full">
               <Icon name="ArrowLeft" size={16} />
