@@ -135,9 +135,7 @@ const ContentSections = () => {
               <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--lime))] mb-3">02 — Каталог</div>
               <h2 className="font-display text-5xl lg:text-6xl">Информационный каталог продукции</h2>
             </div>
-            <div className="hidden md:block text-sm opacity-70 max-w-xs">
-              Три основные товарные группы. Внутри — сорта, характеристики, фото и описания.
-            </div>
+            <div className="hidden md:block text-sm opacity-70 max-w-xs"></div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
