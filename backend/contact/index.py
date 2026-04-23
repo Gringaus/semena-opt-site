@@ -1,11 +1,61 @@
 import json
 import os
 import re
+import smtplib
+import ssl
+from email.mime.text import MIMEText
+from email.header import Header
+from email.utils import formataddr
 import psycopg2
+
+def send_notification(name: str, phone: str, email: str, message: str) -> None:
+    host = os.environ.get('SMTP_HOST')
+    port = os.environ.get('SMTP_PORT')
+    user = os.environ.get('SMTP_USER')
+    password = os.environ.get('SMTP_PASSWORD')
+    to_addr = os.environ.get('NOTIFY_EMAIL') or user
+
+    if not (host and port and user and password and to_addr):
+        return
+
+    subject = f'Новая заявка с сайта: {name}'
+    body_lines = [
+        'Поступила новая заявка с сайта «Семена Оптом».',
+        '',
+        f'Имя: {name}',
+        f'Телефон: {phone}',
+        f'Email: {email}',
+        '',
+        'Сообщение:',
+        message,
+    ]
+    body = '\n'.join(body_lines)
+
+    msg = MIMEText(body, 'plain', 'utf-8')
+    msg['Subject'] = Header(subject, 'utf-8')
+    msg['From'] = formataddr((str(Header('Семена Оптом', 'utf-8')), user))
+    msg['To'] = to_addr
+    msg['Reply-To'] = email
+
+    try:
+        port_int = int(port)
+        context = ssl.create_default_context()
+        if port_int == 465:
+            with smtplib.SMTP_SSL(host, port_int, context=context, timeout=15) as server:
+                server.login(user, password)
+                server.sendmail(user, [to_addr], msg.as_string())
+        else:
+            with smtplib.SMTP(host, port_int, timeout=15) as server:
+                server.starttls(context=context)
+                server.login(user, password)
+                server.sendmail(user, [to_addr], msg.as_string())
+    except Exception as e:
+        print(f'SMTP error: {e}')
+
 
 def handler(event: dict, context) -> dict:
     '''
-    Business: Приём заявок из формы обратной связи и сохранение в БД
+    Business: Приём заявок из формы обратной связи, сохранение в БД и отправка письма на почту
     Args: event - dict с httpMethod, body (JSON с полями name, phone, email, message)
           context - объект с атрибутами request_id, function_name
     Returns: HTTP-ответ со статусом 200 при успехе или 400/500 при ошибке
@@ -90,6 +140,8 @@ def handler(event: dict, context) -> dict:
         cur.close()
     finally:
         conn.close()
+
+    send_notification(name, phone, email, message)
 
     return {
         'statusCode': 200,
