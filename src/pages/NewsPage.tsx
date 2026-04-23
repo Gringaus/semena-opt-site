@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 import { news as newsFallback, NEWS_API_URL, CONTACT_API_URL } from '@/components/site/data';
@@ -18,6 +19,7 @@ const NewsPage = () => {
   const [requestOpen, setRequestOpen] = useState(false);
   const [form, setForm] = useState({ name: '', phone: '', email: '' });
   const [sending, setSending] = useState(false);
+  const [agree, setAgree] = useState(false);
 
   useEffect(() => {
     fetch(NEWS_API_URL)
@@ -43,6 +45,7 @@ const NewsPage = () => {
   const closeRequest = () => {
     setRequestOpen(false);
     setForm({ name: '', phone: '', email: '' });
+    setAgree(false);
   };
 
   const submitRequest = async (e: React.FormEvent) => {
@@ -50,6 +53,10 @@ const NewsPage = () => {
     if (!item) return;
     if (!form.name || !form.phone || !form.email) {
       toast({ title: 'Заполните все поля', variant: 'destructive' });
+      return;
+    }
+    if (!agree) {
+      toast({ title: 'Примите политику конфиденциальности', variant: 'destructive' });
       return;
     }
     if (!CONTACT_API_URL) {
@@ -203,16 +210,21 @@ const NewsPage = () => {
               rows={2}
               className="rounded-xl bg-muted/50 resize-none"
             />
+            <label className="flex items-start gap-3 cursor-pointer pt-1">
+              <Checkbox checked={agree} onCheckedChange={(v) => setAgree(!!v)} className="mt-0.5" />
+              <span className="text-xs text-muted-foreground">
+                Я согласен с <Link to="/privacy" target="_blank" className="underline hover:text-foreground">политикой конфиденциальности</Link> и даю согласие на обработку персональных данных.
+              </span>
+            </label>
             <div className="flex gap-3 pt-1">
               <Button type="button" variant="outline" onClick={closeRequest} className="rounded-full h-11 px-5 border-foreground/20">
                 Отмена
               </Button>
-              <Button type="submit" disabled={sending} className="flex-1 rounded-full h-11 bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))]">
+              <Button type="submit" disabled={sending || !agree} className="flex-1 rounded-full h-11 bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))]">
                 {sending ? 'Отправляем...' : 'Отправить заявку'}
                 <Icon name="Send" size={14} />
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground pt-1">Нажимая «Отправить», вы соглашаетесь с обработкой персональных данных.</p>
           </form>
         </DialogContent>
       </Dialog>
