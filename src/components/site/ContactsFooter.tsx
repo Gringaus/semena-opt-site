@@ -69,9 +69,7 @@ const ContactsFooter = () => {
             <div className="border-t border-[hsl(var(--cream))]/20 pt-8">
               <Icon name="Mail" size={24} className="text-[hsl(var(--lime))] mb-6" />
               <div className="text-xs uppercase tracking-wider opacity-60 mb-2">Почта</div>
-              <a href="mailto:semena.37@mail.ru" className="font-display text-2xl lg:text-3xl mb-1 block hover:text-[hsl(var(--lime))] transition-colors break-all">
-                semena.37@mail.ru
-              </a>
+              <a href="mailto:semena.37@mail.ru" className="font-display text-2xl lg:text-3xl mb-1 block hover:text-[hsl(var(--lime))] transition-colors break-all">semena37@mail.ru</a>
               <div className="text-sm opacity-70">Ответим в течение часа</div>
             </div>
 
