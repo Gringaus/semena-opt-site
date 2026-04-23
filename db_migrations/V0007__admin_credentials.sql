@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS admin_credentials (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(200) NOT NULL,
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+);

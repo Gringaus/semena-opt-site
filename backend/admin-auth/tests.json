@@ -10,13 +10,20 @@
       "name": "Неверный пароль",
       "method": "POST",
       "path": "/",
-      "body": {"password": "wrong-password-test-12345"},
+      "body": {"login": "admin", "password": "wrong-password-test-12345"},
       "expectedStatus": 401
     },
     {
       "name": "Токен без авторизации",
       "method": "GET",
       "path": "/",
+      "expectedStatus": 401
+    },
+    {
+      "name": "PUT без токена",
+      "method": "PUT",
+      "path": "/",
+      "body": {"currentPassword": "x", "newLogin": "newadmin", "newPassword": "abcd"},
       "expectedStatus": 401
     }
   ]

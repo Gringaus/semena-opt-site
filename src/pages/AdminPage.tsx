@@ -4,27 +4,30 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import { Toaster } from '@/components/ui/toaster';
 import { AUTH_URL, Tab } from '@/components/admin/adminTypes';
 import NewsAdmin from '@/components/admin/NewsAdmin';
 import ArchiveAdmin from '@/components/admin/ArchiveAdmin';
 import CatalogAdmin from '@/components/admin/CatalogAdmin';
+import AccountAdmin from '@/components/admin/AccountAdmin';
 
 const AdminPage = () => {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('admin_token'));
+  const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [tab, setTab] = useState<Tab>('news');
   const [loggingIn, setLoggingIn] = useState(false);
 
-  const login = async (e: React.FormEvent) => {
+  const doLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoggingIn(true);
     try {
       const res = await fetch(AUTH_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ login: login.trim(), password }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Ошибка входа');
@@ -44,6 +47,11 @@ const AdminPage = () => {
     setToken(null);
   };
 
+  const onCredentialsChanged = () => {
+    toast({ title: 'Войдите заново', description: 'Данные для входа изменились.' });
+    logout();
+  };
+
   if (!token) {
     return (
       <div className="min-h-screen bg-background grid place-items-center p-6">
@@ -52,16 +60,30 @@ const AdminPage = () => {
             <Icon name="ArrowLeft" size={16} /> На сайт
           </Link>
           <h1 className="font-display text-3xl mb-2">Админка</h1>
-          <p className="text-sm text-muted-foreground mb-6">Введите пароль для входа</p>
-          <form onSubmit={login} className="space-y-4">
-            <Input
-              type="password"
-              placeholder="Пароль"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="h-12"
-              autoFocus
-            />
+          <p className="text-sm text-muted-foreground mb-6">Введите логин и пароль</p>
+          <form onSubmit={doLogin} className="space-y-4">
+            <div>
+              <Label className="mb-1 block">Логин</Label>
+              <Input
+                placeholder="admin"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                className="h-12"
+                autoFocus
+                required
+              />
+            </div>
+            <div>
+              <Label className="mb-1 block">Пароль</Label>
+              <Input
+                type="password"
+                placeholder="Пароль"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-12"
+                required
+              />
+            </div>
             <Button type="submit" disabled={loggingIn} className="w-full h-12 rounded-xl bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
               {loggingIn ? 'Входим...' : 'Войти'}
             </Button>
@@ -71,6 +93,14 @@ const AdminPage = () => {
       </div>
     );
   }
+
+  const tabs: Tab[] = ['news', 'archive', 'catalog', 'account'];
+  const tabLabel: Record<Tab, string> = {
+    news: 'Новости',
+    archive: 'Архив',
+    catalog: 'Каталог',
+    account: 'Аккаунт',
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -88,7 +118,7 @@ const AdminPage = () => {
           </Button>
         </div>
         <div className="container flex gap-2 pb-3 flex-wrap">
-          {(['news', 'archive', 'catalog'] as Tab[]).map((t) => (
+          {tabs.map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -96,7 +126,7 @@ const AdminPage = () => {
                 tab === t ? 'bg-[hsl(var(--forest))] text-[hsl(var(--cream))]' : 'hover:bg-muted'
               }`}
             >
-              {t === 'news' ? 'Новости' : t === 'archive' ? 'Архив' : 'Каталог'}
+              {tabLabel[t]}
             </button>
           ))}
         </div>
@@ -106,6 +136,7 @@ const AdminPage = () => {
         {tab === 'news' && <NewsAdmin token={token} />}
         {tab === 'archive' && <ArchiveAdmin token={token} />}
         {tab === 'catalog' && <CatalogAdmin token={token} />}
+        {tab === 'account' && <AccountAdmin token={token} onCredentialsChanged={onCredentialsChanged} />}
       </main>
       <Toaster />
     </div>
