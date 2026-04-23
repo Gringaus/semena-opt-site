@@ -4,13 +4,17 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { toast } from '@/hooks/use-toast';
 import {
   news as newsFallback,
   catalog as catalogFallback,
   partners,
   NEWS_API_URL,
   CATALOG_API_URL,
+  CONTACT_API_URL,
 } from './data';
 import { faqCategories } from './faq';
 
@@ -21,6 +25,9 @@ const ContentSections = () => {
   const [news, setNews] = useState<NewsApi[]>(newsFallback);
   const [catalog, setCatalog] = useState<CatalogApi[]>(catalogFallback);
   const [selectedCategory, setSelectedCategory] = useState<CatalogApi | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({ name: '', phone: '', email: '' });
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     fetch(NEWS_API_URL)
@@ -33,9 +40,43 @@ const ContentSections = () => {
       .catch(() => {});
   }, []);
 
-  const priceMailHref = selectedCategory
-    ? `mailto:semena.37@mail.ru?subject=${encodeURIComponent('Запрос прайс-листа: ' + selectedCategory.name)}&body=${encodeURIComponent('Здравствуйте! Пришлите, пожалуйста, актуальный прайс-лист по категории «' + selectedCategory.name + '».')}`
-    : '#';
+  const closeDialog = () => {
+    setSelectedCategory(null);
+    setShowForm(false);
+    setForm({ name: '', phone: '', email: '' });
+  };
+
+  const submitRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedCategory) return;
+    if (!form.name || !form.phone || !form.email) {
+      toast({ title: 'Заполните все поля', variant: 'destructive' });
+      return;
+    }
+    if (!CONTACT_API_URL) {
+      toast({ title: 'Форма временно недоступна', description: 'Пожалуйста, свяжитесь по телефону.' });
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await fetch(CONTACT_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...form,
+          message: `Запрос прайс-листа: ${selectedCategory.name}`,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Ошибка отправки');
+      toast({ title: 'Заявка отправлена', description: 'Пришлём прайс-лист и свяжемся с вами в ближайшее время.' });
+      closeDialog();
+    } catch (err) {
+      toast({ title: 'Не удалось отправить', description: err instanceof Error ? err.message : 'Попробуйте позже', variant: 'destructive' });
+    } finally {
+      setSending(false);
+    }
+  };
 
   return (
     <>
@@ -134,8 +175,8 @@ const ContentSections = () => {
         </div>
       </section>
 
-      <Dialog open={!!selectedCategory} onOpenChange={(o) => !o && setSelectedCategory(null)}>
-        <DialogContent className="rounded-3xl max-w-lg p-0 overflow-hidden">
+      <Dialog open={!!selectedCategory} onOpenChange={(o) => { if (!o) closeDialog(); }}>
+        <DialogContent className="rounded-3xl max-w-lg p-0 overflow-hidden max-h-[90vh] overflow-y-auto">
           {selectedCategory && (
             <>
               <div className="aspect-[16/9] overflow-hidden">
@@ -158,22 +199,57 @@ const ContentSections = () => {
                 </div>
                 <div className="p-4 rounded-2xl bg-[hsl(var(--lime))]/20 border border-[hsl(var(--lime))]/40 flex items-start gap-3">
                   <Icon name="Info" size={18} className="text-[hsl(var(--forest))] mt-0.5 shrink-0" />
-                  <div className="text-sm">Запросите прайс-лист с актуальными ценами или свяжитесь с менеджером, чтобы подобрать сорта под ваш регион.</div>
+                  <div className="text-sm">Оставьте заявку — пришлём прайс-лист с актуальными ценами и поможем подобрать сорта под ваш регион.</div>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3 pt-1">
-                  <a href={priceMailHref} className="flex-1">
-                    <Button className="w-full rounded-full bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))] h-12">
+
+                {!showForm ? (
+                  <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                    <Button
+                      onClick={() => setShowForm(true)}
+                      className="flex-1 rounded-full bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))] h-12"
+                    >
                       <Icon name="FileText" size={16} />
                       Запросить прайс-лист
                     </Button>
-                  </a>
-                  <a href="tel:+79206738383" className="flex-1">
-                    <Button variant="outline" className="w-full rounded-full h-12 border-foreground/20">
-                      <Icon name="Phone" size={16} />
-                      Связаться с менеджером
-                    </Button>
-                  </a>
-                </div>
+                    <a href="tel:+79206738383" className="flex-1">
+                      <Button variant="outline" className="w-full rounded-full h-12 border-foreground/20">
+                        <Icon name="Phone" size={16} />
+                        Связаться с менеджером
+                      </Button>
+                    </a>
+                  </div>
+                ) : (
+                  <form onSubmit={submitRequest} className="space-y-3 pt-1">
+                    <div>
+                      <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Имя</label>
+                      <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ваше имя" className="h-11 rounded-xl" />
+                    </div>
+                    <div>
+                      <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Телефон</label>
+                      <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+7 (___) ___-__-__" className="h-11 rounded-xl" />
+                    </div>
+                    <div>
+                      <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Email</label>
+                      <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="name@company.ru" className="h-11 rounded-xl" />
+                    </div>
+                    <Textarea
+                      value={`Запрос прайс-листа: ${selectedCategory.name}`}
+                      readOnly
+                      rows={2}
+                      className="rounded-xl bg-muted/50 resize-none"
+                    />
+                    <div className="flex gap-3 pt-1">
+                      <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="rounded-full h-11 px-5 border-foreground/20">
+                        Назад
+                      </Button>
+                      <Button type="submit" disabled={sending} className="flex-1 rounded-full h-11 bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))]">
+                        {sending ? 'Отправляем...' : 'Отправить заявку'}
+                        <Icon name="Send" size={14} />
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground pt-1">Нажимая «Отправить», вы соглашаетесь с обработкой персональных данных.</p>
+                  </form>
+                )}
               </div>
             </>
           )}
