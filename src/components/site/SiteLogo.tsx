@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-export const LOGO_URL = '';
+export const LOGO_URL = 'https://i.postimg.cc/9MZQsVfv/logo-opt.jpg';
 
 interface SiteLogoProps {
   to?: string;
