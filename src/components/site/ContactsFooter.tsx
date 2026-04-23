@@ -114,10 +114,10 @@ const ContactsFooter = () => {
                 Почта
               </div>
               <a
-                href="mailto:semena37@mail.ru"
+                href="mailto:semena.37@mail.ru"
                 className="font-display text-2xl lg:text-3xl mb-1 block hover:text-[hsl(var(--lime))] transition-colors break-all"
               >
-                semena37@mail.ru
+                semena.37@mail.ru
               </a>
               <div className="text-sm opacity-70">Ответим в течение часа</div>
             </div>
