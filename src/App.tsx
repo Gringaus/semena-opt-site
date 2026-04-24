@@ -14,6 +14,7 @@ import PrivacyPage from "./pages/PrivacyPage";
 import PageNotFound from "./pages/PageNotFound";
 import CookieBanner from "./components/site/CookieBanner";
 import ScrollToTop from "./components/site/ScrollToTop";
+import StickyMobileCTA from "./components/site/StickyMobileCTA";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
         </Routes>
         <CookieBanner />
         <ScrollToTop />
+        <StickyMobileCTA />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
