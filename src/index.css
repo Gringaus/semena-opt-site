@@ -128,6 +128,30 @@
   h4 {
     @apply font-display;
   }
+
+  @media (hover: none) {
+    [class*="hover:-translate"]:hover,
+    [class*="hover:translate"]:hover,
+    [class*="hover:scale"]:hover,
+    .group:hover [class*="group-hover:scale"],
+    .group:hover [class*="group-hover:-translate"],
+    .group:hover [class*="group-hover:translate"] {
+      transform: none !important;
+    }
+    [class*="hover:shadow"]:hover {
+      box-shadow: none !important;
+    }
+    .group:hover [class*="group-hover:gap-"] {
+      gap: inherit !important;
+    }
+    .group:hover [class*="group-hover:opacity-"] {
+      opacity: inherit !important;
+    }
+    .group:hover [class*="group-hover:pl-"],
+    .group:hover [class*="group-hover:pr-"] {
+      padding: inherit !important;
+    }
+  }
 }
 
 @layer utilities {
