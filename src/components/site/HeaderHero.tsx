@@ -78,10 +78,10 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
   return (
     <>
       <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/60">
-        <div className="container flex items-center justify-between h-14 sm:h-16 gap-3">
+        <div className="container flex items-center justify-between h-14 sm:h-16 gap-2 md:gap-3">
           <SiteLogo to="" />
 
-          <nav ref={navRef} className="hidden md:flex items-center gap-1 relative">
+          <nav ref={navRef} className="hidden md:flex items-center gap-0 lg:gap-1 relative">
             <span
               aria-hidden="true"
               className="absolute top-0 h-full rounded-full bg-[hsl(var(--forest))] transition-all duration-300 ease-out pointer-events-none"
@@ -97,7 +97,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                 key={n.id}
                 ref={(el) => { itemRefs.current[n.id] = el; }}
                 onClick={() => scroll(n.id)}
-                className={`relative z-10 px-2.5 lg:px-4 py-2 text-xs lg:text-sm rounded-full transition-colors duration-200 whitespace-nowrap ${
+                className={`relative z-10 px-2 lg:px-4 py-2 text-[11px] lg:text-sm rounded-full transition-colors duration-200 whitespace-nowrap ${
                   active === n.id
                     ? "text-[hsl(var(--cream))]"
                     : "text-foreground hover:text-[hsl(var(--forest))]"
@@ -159,9 +159,12 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
             </Dialog>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="bg-[hsl(var(--earth))] hover:bg-[hsl(var(--earth))]/90 text-white rounded-full h-10 sm:h-10 px-3 sm:px-4 text-sm">
+                <Button
+                  aria-label="Связаться с нами"
+                  className="bg-[hsl(var(--earth))] hover:bg-[hsl(var(--earth))]/90 text-white rounded-full h-10 px-3 sm:px-4 md:w-10 md:px-0 lg:w-auto lg:px-4 text-sm"
+                >
                   <Icon name="Phone" size={16} />
-                  <span className="hidden sm:inline">Связаться</span>
+                  <span className="inline sm:inline md:hidden lg:inline">Связаться</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="rounded-3xl w-[calc(100vw-1.5rem)] max-w-md p-5 sm:p-6">
