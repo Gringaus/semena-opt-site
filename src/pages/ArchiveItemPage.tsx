@@ -187,7 +187,7 @@ const ArchiveItemPage = () => {
                 <time className="text-xs uppercase tracking-wider text-muted-foreground">{item.date}</time>
               </div>
 
-              <h1 className="font-display text-3xl sm:text-4xl lg:text-6xl leading-[1.05] lg:leading-[1] mb-6 sm:mb-10">{item.title}</h1>
+              <h1 className="font-display text-3xl sm:text-4xl lg:text-6xl leading-[1.05] lg:leading-[1] mb-6 sm:mb-10 break-words hyphens-auto">{item.title}</h1>
 
               {item.image && (
                 <AdaptiveImage
