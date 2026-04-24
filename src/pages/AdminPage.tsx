@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,46 @@ const AdminPage = () => {
   const [password, setPassword] = useState('');
   const [tab, setTab] = useState<Tab>('news');
   const [loggingIn, setLoggingIn] = useState(false);
+  const tabsWrapRef = useRef<HTMLDivElement | null>(null);
+  const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [pill, setPill] = useState<{ left: number; width: number; visible: boolean }>({ left: 0, width: 0, visible: false });
+
+  useLayoutEffect(() => {
+    if (!token) return;
+    const btn = tabRefs.current[tab];
+    const wrap = tabsWrapRef.current;
+    if (!btn || !wrap) {
+      setPill((p) => ({ ...p, visible: false }));
+      return;
+    }
+    const b = btn.getBoundingClientRect();
+    const w = wrap.getBoundingClientRect();
+    setPill({ left: b.left - w.left + wrap.scrollLeft, width: b.width, visible: true });
+    const btnLeft = btn.offsetLeft;
+    const btnRight = btnLeft + btn.offsetWidth;
+    if (btnLeft < wrap.scrollLeft || btnRight > wrap.scrollLeft + wrap.clientWidth) {
+      wrap.scrollTo({ left: Math.max(0, btnLeft - 16), behavior: 'smooth' });
+    }
+  }, [tab, token]);
+
+  useEffect(() => {
+    if (!token) return;
+    const recalc = () => {
+      const btn = tabRefs.current[tab];
+      const wrap = tabsWrapRef.current;
+      if (!btn || !wrap) return;
+      const b = btn.getBoundingClientRect();
+      const w = wrap.getBoundingClientRect();
+      setPill({ left: b.left - w.left + wrap.scrollLeft, width: b.width, visible: true });
+    };
+    window.addEventListener('resize', recalc);
+    const wrap = tabsWrapRef.current;
+    wrap?.addEventListener('scroll', recalc, { passive: true });
+    return () => {
+      window.removeEventListener('resize', recalc);
+      wrap?.removeEventListener('scroll', recalc);
+    };
+  }, [tab, token]);
 
   const doLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,13 +159,29 @@ const AdminPage = () => {
             <span className="hidden sm:inline">Выйти</span>
           </Button>
         </div>
-        <div className="container flex gap-2 pb-3 overflow-x-auto flex-nowrap sm:flex-wrap -mx-1 px-1 scrollbar-none">
+        <div
+          ref={tabsWrapRef}
+          className="container flex gap-2 pb-3 overflow-x-auto flex-nowrap sm:flex-wrap -mx-1 px-1 scrollbar-none relative"
+        >
+          <span
+            aria-hidden="true"
+            className="absolute rounded-full bg-[hsl(var(--forest))] transition-all duration-300 ease-out pointer-events-none"
+            style={{
+              left: `${pill.left}px`,
+              width: `${pill.width}px`,
+              top: '0px',
+              height: 'calc(100% - 0.75rem)',
+              opacity: pill.visible ? 1 : 0,
+              transform: pill.visible ? 'scale(1)' : 'scale(0.9)',
+            }}
+          />
           {tabs.map((t) => (
             <button
               key={t}
+              ref={(el) => { tabRefs.current[t] = el; }}
               onClick={() => setTab(t)}
-              className={`shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 text-sm rounded-full transition-colors ${
-                tab === t ? 'bg-[hsl(var(--forest))] text-[hsl(var(--cream))]' : 'hover:bg-muted'
+              className={`relative z-10 shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 text-sm rounded-full transition-colors duration-200 ${
+                tab === t ? 'text-[hsl(var(--cream))]' : 'text-foreground hover:text-[hsl(var(--forest))]'
               }`}
             >
               {tabLabel[t]}
