@@ -26,6 +26,7 @@ interface CatalogApi { id?: number; name: string; count: number; img: string; it
 
 const ContentSections = () => {
   const [news, setNews] = useState<NewsApi[]>(newsFallback);
+  const [homeLimit, setHomeLimit] = useState<number>(3);
   const [catalog, setCatalog] = useState<CatalogApi[]>(catalogFallback);
   const [selectedCategory, setSelectedCategory] = useState<CatalogApi | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -36,7 +37,10 @@ const ContentSections = () => {
   useEffect(() => {
     fetch(NEWS_API_URL)
       .then((r) => r.json())
-      .then((d) => { if (d.items?.length) setNews(d.items); })
+      .then((d) => {
+        if (d.items?.length) setNews(d.items);
+        if (typeof d.homeLimit === 'number' && d.homeLimit > 0) setHomeLimit(d.homeLimit);
+      })
       .catch(() => {});
     fetch(CATALOG_API_URL)
       .then((r) => r.json())
@@ -103,7 +107,7 @@ const ContentSections = () => {
         </div>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          {news.slice(0, 3).map((n, i) => (
+          {news.slice(0, homeLimit).map((n, i) => (
             <Link key={i} to={`/news/${n.slug}`} className="block h-full">
               <Card className="rounded-2xl sm:rounded-3xl border-border/60 hover:shadow-xl transition-all hover:-translate-y-1 bg-card group cursor-pointer h-full overflow-hidden flex flex-col">
                 {n.image && (

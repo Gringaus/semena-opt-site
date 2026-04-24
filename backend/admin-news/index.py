@@ -60,7 +60,7 @@ def handler(event, context):
                 }
                 for r in rows
             ]
-            return _json(200, {'items': data})
+            return _json(200, {'items': data, 'homeLimit': _get_home_limit()})
 
         if not _check_auth(event, conn):
             return _json(401, {'error': 'unauthorized'})
@@ -152,18 +152,25 @@ def handler(event, context):
         conn.close()
 
 
-MAX_NEWS_ON_HOME = 3
+def _get_home_limit():
+    """Лимит свежих новостей на главной. Настраивается через env NEWS_HOME_LIMIT, по умолчанию 3."""
+    try:
+        val = int(os.environ.get('NEWS_HOME_LIMIT', '3'))
+        return val if val > 0 else 3
+    except (TypeError, ValueError):
+        return 3
 
 
 def _archive_overflow(conn):
-    """Держим на главной не более 3 новостей. Лишние (самые старые) переносим в archive."""
+    """Держим на главной не более NEWS_HOME_LIMIT новостей. Лишние (самые старые) переносим в archive."""
+    limit = _get_home_limit()
     try:
         with conn.cursor() as cur:
             cur.execute("SELECT COUNT(*) FROM news WHERE published = TRUE")
             total = cur.fetchone()[0] or 0
-            if total <= MAX_NEWS_ON_HOME:
+            if total <= limit:
                 return
-            overflow = total - MAX_NEWS_ON_HOME
+            overflow = total - limit
             cur.execute(
                 """SELECT id, slug, date_label, title, text, content, image, images
                    FROM news WHERE published = TRUE ORDER BY id ASC LIMIT %s""",
