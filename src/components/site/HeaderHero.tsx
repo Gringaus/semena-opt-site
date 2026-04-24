@@ -21,6 +21,12 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
   const navRef = useRef<HTMLElement | null>(null);
   const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [pill, setPill] = useState<{ left: number; width: number; visible: boolean }>({ left: 0, width: 0, visible: false });
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMobileNav = (id: string) => {
+    setMenuOpen(false);
+    setTimeout(() => scroll(id), 50);
+  };
 
   useLayoutEffect(() => {
     const btn = itemRefs.current[active];
@@ -80,11 +86,52 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <Dialog open={menuOpen} onOpenChange={setMenuOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  aria-label="Открыть меню"
+                  className="lg:hidden rounded-full h-10 w-10 p-0 border-foreground/20"
+                >
+                  <Icon name="Menu" size={20} />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="rounded-3xl w-[calc(100vw-1.5rem)] max-w-md p-5 sm:p-6">
+                <DialogHeader>
+                  <DialogTitle className="font-display text-2xl sm:text-3xl">Меню</DialogTitle>
+                </DialogHeader>
+                <nav className="flex flex-col gap-1 pt-2">
+                  {nav.map((n) => (
+                    <button
+                      key={n.id}
+                      onClick={() => handleMobileNav(n.id)}
+                      className={`text-left px-4 py-3 rounded-2xl text-base font-medium transition-colors ${
+                        active === n.id
+                          ? "bg-[hsl(var(--forest))] text-[hsl(var(--cream))]"
+                          : "hover:bg-muted text-foreground"
+                      }`}
+                    >
+                      {n.label}
+                    </button>
+                  ))}
+                </nav>
+                <div className="border-t border-border/60 pt-4 mt-2 space-y-3">
+                  <a href="tel:+79206738383" className="flex items-center gap-3 hover:text-[hsl(var(--earth))] transition-colors">
+                    <Icon name="Phone" size={18} className="text-[hsl(var(--forest))]" />
+                    <span className="font-display text-lg">+7 (920) 673-83-83</span>
+                  </a>
+                  <a href="mailto:semena.37@mail.ru" className="flex items-center gap-3 hover:text-[hsl(var(--earth))] transition-colors">
+                    <Icon name="Mail" size={18} className="text-[hsl(var(--forest))]" />
+                    <span className="font-display text-base break-all">semena.37@mail.ru</span>
+                  </a>
+                </div>
+              </DialogContent>
+            </Dialog>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="bg-[hsl(var(--earth))] hover:bg-[hsl(var(--earth))]/90 text-white rounded-full h-9 sm:h-10 px-3 sm:px-4 text-sm">
+                <Button className="bg-[hsl(var(--earth))] hover:bg-[hsl(var(--earth))]/90 text-white rounded-full h-10 sm:h-10 px-3 sm:px-4 text-sm">
                   <Icon name="Phone" size={16} />
-                  <span className="hidden xs:inline sm:inline">Связаться</span>
+                  <span className="hidden sm:inline">Связаться</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="rounded-3xl w-[calc(100vw-1.5rem)] max-w-md p-5 sm:p-6">
