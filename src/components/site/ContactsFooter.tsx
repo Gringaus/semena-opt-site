@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
@@ -20,9 +20,11 @@ const ContactsFooter = () => {
   });
   const [sending, setSending] = useState(false);
   const [agree, setAgree] = useState(false);
+  const sendingRef = useRef(false);
 
   const submitForm = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sendingRef.current) return;
     if (!form.name || !form.phone || !form.email || !form.message) {
       toast({ title: "Заполните все поля", variant: "destructive" });
       return;
@@ -49,6 +51,7 @@ const ContactsFooter = () => {
       });
       return;
     }
+    sendingRef.current = true;
     setSending(true);
     reachGoal(Goals.ContactFormSubmit, { source: 'main_form' });
     try {
@@ -72,6 +75,7 @@ const ContactsFooter = () => {
         variant: "destructive",
       });
     } finally {
+      sendingRef.current = false;
       setSending(false);
     }
   };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,7 @@ const NewsPage = () => {
   const [form, setForm] = useState({ name: '', phone: '', email: '' });
   const [sending, setSending] = useState(false);
   const [agree, setAgree] = useState(false);
+  const sendingRef = useRef(false);
 
   useEffect(() => {
     fetch(NEWS_API_URL)
@@ -79,6 +80,7 @@ const NewsPage = () => {
 
   const submitRequest = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sendingRef.current) return;
     if (!item) return;
     if (!form.name || !form.phone || !form.email) {
       toast({ title: 'Заполните все поля', variant: 'destructive' });
@@ -100,6 +102,7 @@ const NewsPage = () => {
       toast({ title: 'Форма временно недоступна', description: 'Пожалуйста, свяжитесь по телефону.' });
       return;
     }
+    sendingRef.current = true;
     setSending(true);
     reachGoal(Goals.PriceRequestSubmit, { source: 'news_page', news: item.title });
     try {
@@ -119,6 +122,7 @@ const NewsPage = () => {
     } catch (err) {
       toast({ title: 'Не удалось отправить', description: err instanceof Error ? err.message : 'Попробуйте позже', variant: 'destructive' });
     } finally {
+      sendingRef.current = false;
       setSending(false);
     }
   };
