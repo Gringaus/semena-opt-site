@@ -1,3 +1,4 @@
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Icon from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,21 +18,61 @@ interface HeaderHeroProps {
 }
 
 const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
+  const navRef = useRef<HTMLElement | null>(null);
+  const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [pill, setPill] = useState<{ left: number; width: number; visible: boolean }>({ left: 0, width: 0, visible: false });
+
+  useLayoutEffect(() => {
+    const btn = itemRefs.current[active];
+    const wrap = navRef.current;
+    if (!btn || !wrap) {
+      setPill((p) => ({ ...p, visible: false }));
+      return;
+    }
+    const b = btn.getBoundingClientRect();
+    const w = wrap.getBoundingClientRect();
+    setPill({ left: b.left - w.left, width: b.width, visible: true });
+  }, [active]);
+
+  useEffect(() => {
+    const onResize = () => {
+      const btn = itemRefs.current[active];
+      const wrap = navRef.current;
+      if (!btn || !wrap) return;
+      const b = btn.getBoundingClientRect();
+      const w = wrap.getBoundingClientRect();
+      setPill({ left: b.left - w.left, width: b.width, visible: true });
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [active]);
+
   return (
     <>
       <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/60">
         <div className="container flex items-center justify-between h-14 sm:h-16 gap-3">
           <SiteLogo to="" />
 
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav ref={navRef} className="hidden lg:flex items-center gap-1 relative">
+            <span
+              aria-hidden="true"
+              className="absolute top-0 h-full rounded-full bg-[hsl(var(--forest))] transition-all duration-300 ease-out pointer-events-none"
+              style={{
+                left: `${pill.left}px`,
+                width: `${pill.width}px`,
+                opacity: pill.visible ? 1 : 0,
+                transform: pill.visible ? "scale(1)" : "scale(0.9)",
+              }}
+            />
             {nav.map((n) => (
               <button
                 key={n.id}
+                ref={(el) => { itemRefs.current[n.id] = el; }}
                 onClick={() => scroll(n.id)}
-                className={`px-4 py-2 text-sm rounded-full transition-colors ${
+                className={`relative z-10 px-4 py-2 text-sm rounded-full transition-colors duration-200 ${
                   active === n.id
-                    ? "bg-[hsl(var(--forest))] text-[hsl(var(--cream))]"
-                    : "hover:bg-muted"
+                    ? "text-[hsl(var(--cream))]"
+                    : "text-foreground hover:text-[hsl(var(--forest))]"
                 }`}
               >
                 {n.label}
