@@ -126,7 +126,7 @@ const CatalogAdmin = ({ token }: { token: string }) => {
           </div>
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Сорта (через запятую)</label><Textarea rows={2} value={editing.items} onChange={(e) => setEditing({ ...editing, items: e.target.value })} placeholder="Томаты, Огурцы, Перец" /></div>
           <div className="flex gap-3">
-            <Button onClick={save} disabled={loading} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">{loading ? 'Сохраняем...' : 'Сохранить'}</Button>
+            <Button onClick={save} disabled={loading || !!uploading} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">{loading ? 'Сохраняем...' : uploading ? 'Обработка фото...' : 'Сохранить'}</Button>
             <Button variant="outline" onClick={() => setEditing(null)} className="rounded-full">Отмена</Button>
           </div>
         </Card>
