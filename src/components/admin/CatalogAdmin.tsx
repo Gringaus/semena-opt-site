@@ -88,19 +88,19 @@ const CatalogAdmin = ({ token }: { token: string }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="font-display text-3xl">Каталог ({items.length})</h2>
-        <Button onClick={() => setEditing({ name: '', count: 0, img: '', items: '', sort: 0 })} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <h2 className="font-display text-2xl sm:text-3xl">Каталог ({items.length})</h2>
+        <Button onClick={() => setEditing({ name: '', count: 0, img: '', items: '', sort: 0 })} className="w-full sm:w-auto rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
           <Icon name="Plus" size={16} /> Добавить категорию
         </Button>
       </div>
 
       {editing && (
-        <Card className="p-6 rounded-2xl space-y-4">
+        <Card className="p-4 sm:p-6 rounded-2xl space-y-4">
           <div className="font-display text-xl">{editing.id ? 'Редактирование' : 'Новая категория'}</div>
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Название</label><Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4">
             <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Количество сортов</label><Input type="number" value={editing.count} onChange={(e) => setEditing({ ...editing, count: Number(e.target.value) })} /></div>
             <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Порядок</label><Input type="number" value={editing.sort || 0} onChange={(e) => setEditing({ ...editing, sort: Number(e.target.value) })} /></div>
           </div>
@@ -125,9 +125,9 @@ const CatalogAdmin = ({ token }: { token: string }) => {
             />
           </div>
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Сорта (через запятую)</label><Textarea rows={2} value={editing.items} onChange={(e) => setEditing({ ...editing, items: e.target.value })} placeholder="Томаты, Огурцы, Перец" /></div>
-          <div className="flex gap-3">
-            <Button onClick={save} disabled={loading || !!uploading} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">{loading ? 'Сохраняем...' : uploading ? 'Обработка фото...' : 'Сохранить'}</Button>
-            <Button variant="outline" onClick={() => setEditing(null)} className="rounded-full">Отмена</Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button onClick={save} disabled={loading || !!uploading} className="w-full sm:w-auto rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">{loading ? 'Сохраняем...' : uploading ? 'Обработка фото...' : 'Сохранить'}</Button>
+            <Button variant="outline" onClick={() => setEditing(null)} className="w-full sm:w-auto rounded-full">Отмена</Button>
           </div>
         </Card>
       )}
@@ -138,19 +138,19 @@ const CatalogAdmin = ({ token }: { token: string }) => {
         getId={(c) => c.id ?? c.name}
         onReorder={reorder}
         renderItem={(c) => (
-          <Card className="p-4 rounded-2xl flex gap-4 items-center">
+          <Card className="p-3 sm:p-4 rounded-2xl flex gap-3 sm:gap-4 items-center">
             {c.img ? (
-              <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0">
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0">
                 <img src={c.img} alt={c.name} className="w-full h-full object-cover" />
               </div>
             ) : (
-              <div className="w-20 h-20 rounded-xl bg-muted grid place-items-center shrink-0">
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl bg-muted grid place-items-center shrink-0">
                 <Icon name="Image" size={20} className="text-muted-foreground" />
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <div className="font-display text-lg truncate">{c.name}</div>
-              <div className="text-sm text-muted-foreground truncate">{c.count} сортов · {c.items}</div>
+              <div className="font-display text-base sm:text-lg line-clamp-1 sm:truncate">{c.name}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground line-clamp-1 sm:truncate">{c.count} сортов · {c.items}</div>
             </div>
             <div className="flex gap-2 shrink-0">
               <Button size="sm" variant="outline" className="rounded-full" onClick={() => setEditing(c)}><Icon name="Pencil" size={14} /></Button>

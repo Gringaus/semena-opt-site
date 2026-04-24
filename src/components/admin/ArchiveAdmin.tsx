@@ -132,18 +132,18 @@ const ArchiveAdmin = ({ token }: { token: string }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="font-display text-3xl">Архив ({items.length})</h2>
-        <Button onClick={() => setEditing({ date: '', title: '', content: '', image: '', sort: 0 })} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <h2 className="font-display text-2xl sm:text-3xl">Архив ({items.length})</h2>
+        <Button onClick={() => setEditing({ date: '', title: '', content: '', image: '', sort: 0 })} className="w-full sm:w-auto rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
           <Icon name="Plus" size={16} /> Добавить запись
         </Button>
       </div>
 
       {editing && (
-        <Card className="p-6 rounded-2xl space-y-4">
+        <Card className="p-4 sm:p-6 rounded-2xl space-y-4">
           <div className="font-display text-xl">{editing.id ? 'Редактирование' : 'Новая запись'}</div>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4">
             <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Дата (напр. «Март 2026»)</label><Input value={editing.date} onChange={(e) => setEditing({ ...editing, date: e.target.value })} /></div>
             <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Порядок</label><Input type="number" value={editing.sort || 0} onChange={(e) => setEditing({ ...editing, sort: Number(e.target.value) })} /></div>
           </div>
@@ -181,14 +181,14 @@ const ArchiveAdmin = ({ token }: { token: string }) => {
               className="block w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:bg-[hsl(var(--forest))] file:text-[hsl(var(--cream))] file:cursor-pointer mb-3"
             />
             {editing.images && editing.images.length > 0 && (
-              <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                 {editing.images.map((img, i) => (
                   <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border/60 group">
                     <img src={img} alt={`галерея ${i + 1}`} className="w-full h-full object-cover" />
                     <button
                       type="button"
                       onClick={() => removeGalleryImage(i)}
-                      className="absolute top-1 right-1 w-7 h-7 rounded-full bg-destructive text-destructive-foreground grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 w-7 h-7 rounded-full bg-destructive text-destructive-foreground grid place-items-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                     >
                       <Icon name="X" size={14} />
                     </button>
@@ -199,9 +199,9 @@ const ArchiveAdmin = ({ token }: { token: string }) => {
           </div>
 
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Slug (для URL, опционально)</label><Input value={editing.slug || ''} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="авто-генерация если пусто" /></div>
-          <div className="flex gap-3">
-            <Button onClick={save} disabled={loading || !!uploading} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">{loading ? 'Сохраняем...' : uploading ? 'Обработка фото...' : 'Сохранить'}</Button>
-            <Button variant="outline" onClick={() => setEditing(null)} className="rounded-full">Отмена</Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button onClick={save} disabled={loading || !!uploading} className="w-full sm:w-auto rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">{loading ? 'Сохраняем...' : uploading ? 'Обработка фото...' : 'Сохранить'}</Button>
+            <Button variant="outline" onClick={() => setEditing(null)} className="w-full sm:w-auto rounded-full">Отмена</Button>
           </div>
         </Card>
       )}
@@ -212,19 +212,19 @@ const ArchiveAdmin = ({ token }: { token: string }) => {
         getId={(a) => a.id ?? a.title}
         onReorder={reorder}
         renderItem={(a) => (
-          <Card className="p-5 rounded-2xl flex items-center gap-4">
+          <Card className="p-4 sm:p-5 rounded-2xl flex items-center gap-3 sm:gap-4">
             {a.image ? (
-              <div className="w-20 h-20 rounded-xl overflow-hidden shrink-0">
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0">
                 <img src={a.image} alt={a.title} className="w-full h-full object-cover" />
               </div>
             ) : (
-              <div className="w-20 h-20 rounded-xl bg-muted grid place-items-center shrink-0">
-                <Icon name="Image" size={24} className="text-muted-foreground" />
+              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl bg-muted grid place-items-center shrink-0">
+                <Icon name="Image" size={22} className="text-muted-foreground" />
               </div>
             )}
             <div className="flex-1 min-w-0">
               <div className="text-xs text-muted-foreground mb-1">{a.date}</div>
-              <div className="font-display text-lg truncate">{a.title}</div>
+              <div className="font-display text-base sm:text-lg line-clamp-2 sm:truncate">{a.title}</div>
             </div>
             <div className="flex gap-2 shrink-0">
               <Button size="sm" variant="outline" className="rounded-full" onClick={() => setEditing(a)}><Icon name="Pencil" size={14} /></Button>

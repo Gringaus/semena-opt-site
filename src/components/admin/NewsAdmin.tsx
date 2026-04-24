@@ -185,18 +185,18 @@ const NewsAdmin = ({ token }: { token: string }) => {
   const dateIso = useMemo(() => editing ? labelToIso(editing.date) : '', [editing?.date]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="font-display text-3xl">Новости ({items.length})</h2>
-        <Button onClick={() => setEditing({ date: isoToLabel(todayIso()), tag: 'Новость', title: '', text: '', content: '', image: '', published: true, images: [], imagesUploads: [] })} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <h2 className="font-display text-2xl sm:text-3xl">Новости ({items.length})</h2>
+        <Button onClick={() => setEditing({ date: isoToLabel(todayIso()), tag: 'Новость', title: '', text: '', content: '', image: '', published: true, images: [], imagesUploads: [] })} className="w-full sm:w-auto rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
           <Icon name="Plus" size={16} /> Добавить
         </Button>
       </div>
 
       {editing && (
-        <Card className="p-6 rounded-2xl space-y-4">
+        <Card className="p-4 sm:p-6 rounded-2xl space-y-4">
           <div className="font-display text-xl">{editing.id ? 'Редактирование' : 'Новая новость'}</div>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs uppercase text-muted-foreground mb-1 block">Дата</label>
               <div className="flex gap-2">
@@ -207,9 +207,9 @@ const NewsAdmin = ({ token }: { token: string }) => {
                     const iso = e.target.value;
                     setEditing({ ...editing, date: iso ? isoToLabel(iso) : '' });
                   }}
-                  className="flex-1"
+                  className="flex-1 min-w-0"
                 />
-                <Button type="button" variant="outline" className="rounded-full shrink-0" onClick={() => setEditing({ ...editing, date: isoToLabel(todayIso()) })}>
+                <Button type="button" variant="outline" className="rounded-full shrink-0 px-3 sm:px-4 text-sm" onClick={() => setEditing({ ...editing, date: isoToLabel(todayIso()) })}>
                   Сегодня
                 </Button>
               </div>
@@ -263,14 +263,14 @@ const NewsAdmin = ({ token }: { token: string }) => {
               className="block w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-full file:border-0 file:bg-[hsl(var(--forest))] file:text-[hsl(var(--cream))] file:cursor-pointer mb-3"
             />
             {editing.images && editing.images.length > 0 && (
-              <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                 {editing.images.map((img, i) => (
                   <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border/60 group">
                     <img src={img} alt={`галерея ${i + 1}`} className="w-full h-full object-cover" />
                     <button
                       type="button"
                       onClick={() => removeGalleryImage(i)}
-                      className="absolute top-1 right-1 w-7 h-7 rounded-full bg-destructive text-destructive-foreground grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 w-7 h-7 rounded-full bg-destructive text-destructive-foreground grid place-items-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                     >
                       <Icon name="X" size={14} />
                     </button>
@@ -281,27 +281,27 @@ const NewsAdmin = ({ token }: { token: string }) => {
           </div>
 
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Slug (для URL, опционально)</label><Input value={editing.slug || ''} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="авто-генерация если пусто" /></div>
-          <div className="flex gap-3">
-            <Button onClick={save} disabled={loading || !!uploading} className="rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button onClick={save} disabled={loading || !!uploading} className="w-full sm:w-auto rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
               {loading ? 'Сохраняем...' : uploading ? 'Обработка фото...' : 'Сохранить'}
             </Button>
-            <Button variant="outline" onClick={() => setEditing(null)} className="rounded-full">Отмена</Button>
+            <Button variant="outline" onClick={() => setEditing(null)} className="w-full sm:w-auto rounded-full">Отмена</Button>
           </div>
         </Card>
       )}
 
       <div className="space-y-3">
         {items.map((n) => (
-          <Card key={n.id} className="p-5 rounded-2xl flex items-start justify-between gap-4">
+          <Card key={n.id} className="p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
             <div className="flex-1 min-w-0">
               <div className="text-xs text-muted-foreground mb-1">{n.date} · {n.tag}</div>
-              <div className="font-display text-lg truncate">{n.title}</div>
+              <div className="font-display text-base sm:text-lg line-clamp-2 sm:truncate">{n.title}</div>
               <div className="text-sm text-muted-foreground line-clamp-1">{n.text}</div>
             </div>
-            <div className="flex gap-2 shrink-0">
-              <Button size="sm" variant="outline" className="rounded-full" onClick={() => setEditing(n)} title="Редактировать"><Icon name="Pencil" size={14} /></Button>
-              <Button size="sm" variant="outline" className="rounded-full" onClick={() => moveToArchive(n)} disabled={loading} title="Перенести в архив"><Icon name="Archive" size={14} /></Button>
-              <Button size="sm" variant="outline" className="rounded-full text-destructive" onClick={() => remove(n.id!)} title="Удалить"><Icon name="Trash2" size={14} /></Button>
+            <div className="flex gap-2 shrink-0 sm:self-start">
+              <Button size="sm" variant="outline" className="rounded-full flex-1 sm:flex-none" onClick={() => setEditing(n)} title="Редактировать"><Icon name="Pencil" size={14} /></Button>
+              <Button size="sm" variant="outline" className="rounded-full flex-1 sm:flex-none" onClick={() => moveToArchive(n)} disabled={loading} title="Перенести в архив"><Icon name="Archive" size={14} /></Button>
+              <Button size="sm" variant="outline" className="rounded-full flex-1 sm:flex-none text-destructive" onClick={() => remove(n.id!)} title="Удалить"><Icon name="Trash2" size={14} /></Button>
             </div>
           </Card>
         ))}
