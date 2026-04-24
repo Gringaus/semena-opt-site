@@ -286,14 +286,15 @@ const ContactsFooter = () => {
           <span className="hidden md:inline">·</span>
           <Link
             to="/privacy"
-            className="hover:text-foreground transition-colors underline"
+            className="inline-flex items-center min-h-[44px] py-2 hover:text-foreground transition-colors underline"
           >
             Политика конфиденциальности
           </Link>
           <span className="hidden md:inline">·</span>
           <Link
             to="/admin"
-            className="inline-flex items-center gap-1.5 hover:text-foreground transition-colors"
+            aria-label="Вход для администратора"
+            className="inline-flex items-center gap-1.5 min-h-[44px] py-2 hover:text-foreground transition-colors"
           >
             <Icon name="Lock" size={14} />
             Вход для администратора
