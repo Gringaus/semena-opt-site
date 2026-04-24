@@ -99,7 +99,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                 key={n.id}
                 ref={(el) => { itemRefs.current[n.id] = el; }}
                 onClick={() => scroll(n.id)}
-                className={`relative z-10 px-2 lg:px-4 py-2 text-[11px] lg:text-sm rounded-full transition-colors duration-200 whitespace-nowrap ${
+                className={`relative z-10 px-2 lg:px-3 xl:px-4 py-2 text-[11px] lg:text-sm rounded-full transition-colors duration-200 whitespace-nowrap ${
                   active === n.id
                     ? "text-[hsl(var(--cream))]"
                     : "text-foreground hover:text-[hsl(var(--forest))]"

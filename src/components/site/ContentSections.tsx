@@ -113,7 +113,7 @@ const ContentSections = () => {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 sm:mb-12">
           <div>
             <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--earth))] mb-2 sm:mb-3">01 — Новости</div>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-6xl">Новости и поступления</h2>
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">Новости и поступления</h2>
           </div>
           <div className="hidden md:block text-sm text-muted-foreground max-w-xs">
             Свежие партии, изменения в наличии и отраслевые события — обновляем еженедельно.
@@ -171,7 +171,7 @@ const ContentSections = () => {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8 sm:mb-12">
             <div>
               <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--lime))] mb-2 sm:mb-3">02 — Каталог</div>
-              <h2 className="font-display text-3xl sm:text-4xl lg:text-6xl">Информационный каталог продукции</h2>
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl">Информационный каталог продукции</h2>
             </div>
             <div className="hidden md:block text-sm opacity-70 max-w-xs"></div>
           </div>
@@ -383,7 +383,7 @@ const ContentSections = () => {
           </div>
           <div>
             <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--earth))] mb-2 sm:mb-3">05 — О нас</div>
-            <h2 className="font-display text-3xl sm:text-4xl lg:text-6xl leading-[0.95] mb-5 sm:mb-8">
+            <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl leading-[0.95] mb-5 sm:mb-8">
               20 лет <em className="text-[hsl(var(--earth))]">растём</em> <br />вместе с фермерами.
             </h2>
             <div className="space-y-4 sm:space-y-5 text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-10">

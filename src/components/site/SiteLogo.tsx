@@ -21,7 +21,7 @@ const SiteLogo = ({ to = '/', className = '' }: SiteLogoProps) => {
       )}
       <div className="leading-tight min-w-0">
         <div className="font-display text-base sm:text-xl font-semibold whitespace-nowrap">Семена Оптом</div>
-        <div className="text-[10px] uppercase tracking-wide text-muted-foreground max-w-[260px] hidden sm:block md:hidden lg:block">
+        <div className="text-[10px] uppercase tracking-wide text-muted-foreground max-w-[260px] hidden sm:block md:hidden xl:block">
           магазин для юридических лиц и индивидуальных предпринимателей
         </div>
       </div>
