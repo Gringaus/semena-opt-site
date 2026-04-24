@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
-import { NEWS_URL, NewsItem, NewsImageUpload } from './adminTypes';
+import { NEWS_URL, ARCHIVE_URL, NewsItem, NewsImageUpload } from './adminTypes';
 import { compressImage } from './imageCompress';
 import UploadProgress from './UploadProgress';
 
@@ -148,6 +148,40 @@ const NewsAdmin = ({ token }: { token: string }) => {
     await load();
   };
 
+  const moveToArchive = async (n: NewsItem) => {
+    if (!n.id) return;
+    if (!confirm(`Перенести новость «${n.title}» в архив?`)) return;
+    setLoading(true);
+    try {
+      const archivePayload = {
+        date: n.date || '',
+        title: n.title || '',
+        content: typeof n.content === 'string' ? n.content : (Array.isArray(n.content) ? (n.content as string[]).join('\n\n') : ''),
+        image: n.image && !n.image.startsWith('data:') ? n.image : '',
+        images: (n.images || []).filter((s) => !s.startsWith('data:')),
+        sort: 0,
+      };
+      const res = await fetch(ARCHIVE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token },
+        body: JSON.stringify(archivePayload),
+      });
+      if (!res.ok) throw new Error('Не удалось создать запись в архиве');
+      const delRes = await fetch(NEWS_URL, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'X-Auth-Token': token },
+        body: JSON.stringify({ id: n.id }),
+      });
+      if (!delRes.ok) throw new Error('Запись в архиве создана, но новость удалить не удалось');
+      toast({ title: 'Перенесено в архив' });
+      await load();
+    } catch (err) {
+      toast({ title: 'Ошибка', description: err instanceof Error ? err.message : '', variant: 'destructive' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const dateIso = useMemo(() => editing ? labelToIso(editing.date) : '', [editing?.date]);
 
   return (
@@ -265,8 +299,9 @@ const NewsAdmin = ({ token }: { token: string }) => {
               <div className="text-sm text-muted-foreground line-clamp-1">{n.text}</div>
             </div>
             <div className="flex gap-2 shrink-0">
-              <Button size="sm" variant="outline" className="rounded-full" onClick={() => setEditing(n)}><Icon name="Pencil" size={14} /></Button>
-              <Button size="sm" variant="outline" className="rounded-full text-destructive" onClick={() => remove(n.id!)}><Icon name="Trash2" size={14} /></Button>
+              <Button size="sm" variant="outline" className="rounded-full" onClick={() => setEditing(n)} title="Редактировать"><Icon name="Pencil" size={14} /></Button>
+              <Button size="sm" variant="outline" className="rounded-full" onClick={() => moveToArchive(n)} disabled={loading} title="Перенести в архив"><Icon name="Archive" size={14} /></Button>
+              <Button size="sm" variant="outline" className="rounded-full text-destructive" onClick={() => remove(n.id!)} title="Удалить"><Icon name="Trash2" size={14} /></Button>
             </div>
           </Card>
         ))}
