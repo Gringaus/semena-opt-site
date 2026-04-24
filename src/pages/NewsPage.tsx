@@ -14,6 +14,7 @@ import AdaptiveImage from '@/components/site/AdaptiveImage';
 import PhoneInput from '@/components/site/PhoneInput';
 import useDocumentMeta from '@/hooks/useDocumentMeta';
 import { reachGoal, Goals } from '@/lib/metrika';
+import { isValidEmail, EMAIL_ERROR_TITLE, EMAIL_ERROR_DESC } from '@/lib/validators';
 
 interface NewsItem { slug: string; date: string; tag: string; title: string; text: string; content?: string[]; image?: string; images?: string[] }
 
@@ -81,6 +82,10 @@ const NewsPage = () => {
     if (!item) return;
     if (!form.name || !form.phone || !form.email) {
       toast({ title: 'Заполните все поля', variant: 'destructive' });
+      return;
+    }
+    if (!isValidEmail(form.email)) {
+      toast({ title: EMAIL_ERROR_TITLE, description: EMAIL_ERROR_DESC, variant: 'destructive' });
       return;
     }
     if (!agree) {

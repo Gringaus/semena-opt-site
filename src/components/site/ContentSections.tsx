@@ -21,6 +21,7 @@ import { faqCategories } from './faq';
 import AdaptiveImage from './AdaptiveImage';
 import PhoneInput from './PhoneInput';
 import { reachGoal, Goals } from '@/lib/metrika';
+import { isValidEmail, EMAIL_ERROR_TITLE, EMAIL_ERROR_DESC } from '@/lib/validators';
 
 interface NewsApi { id?: number; slug: string; date: string; tag: string; title: string; text: string; content?: string[]; image?: string }
 interface CatalogApi { id?: number; name: string; count: number; img: string; items: string[] }
@@ -61,6 +62,10 @@ const ContentSections = () => {
     if (!selectedCategory) return;
     if (!form.name || !form.phone || !form.email) {
       toast({ title: 'Заполните все поля', variant: 'destructive' });
+      return;
+    }
+    if (!isValidEmail(form.email)) {
+      toast({ title: EMAIL_ERROR_TITLE, description: EMAIL_ERROR_DESC, variant: 'destructive' });
       return;
     }
     if (!agree) {
