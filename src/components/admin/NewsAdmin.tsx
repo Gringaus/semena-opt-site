@@ -20,6 +20,16 @@ const todayIso = () => {
   return `${y}-${m}-${day}`;
 };
 
+const makeTextFromContent = (content: string, max = 180): string => {
+  if (!content) return '';
+  const firstBlock = content.split(/\n\s*\n/)[0] || '';
+  const clean = firstBlock.replace(/\s+/g, ' ').trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max);
+  const lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > max - 40 ? cut.slice(0, lastSpace) : cut).trimEnd() + '…';
+};
+
 const isoToLabel = (iso: string): string => {
   if (!iso) return '';
   const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -117,6 +127,7 @@ const NewsAdmin = ({ token }: { token: string }) => {
     setLoading(true);
     try {
       const payload = { ...editing };
+      payload.text = makeTextFromContent(payload.content || '');
       if (payload.imageBase64 && payload.image?.startsWith('data:')) {
         payload.image = '';
       }
@@ -229,8 +240,23 @@ const NewsAdmin = ({ token }: { token: string }) => {
             </div>
           </div>
           <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Заголовок</label><Input value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} /></div>
-          <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Краткое описание</label><Textarea rows={2} value={editing.text} onChange={(e) => setEditing({ ...editing, text: e.target.value })} /></div>
-          <div><label className="text-xs uppercase text-muted-foreground mb-1 block">Полный текст (абзацы через пустую строку)</label><Textarea rows={8} value={editing.content} onChange={(e) => setEditing({ ...editing, content: e.target.value })} /></div>
+          <div>
+            <label className="text-xs uppercase text-muted-foreground mb-1 block">Полный текст (абзацы через пустую строку)</label>
+            <Textarea
+              rows={8}
+              value={editing.content}
+              onChange={(e) => {
+                const content = e.target.value;
+                setEditing({ ...editing, content, text: makeTextFromContent(content) });
+              }}
+            />
+          </div>
+          <div>
+            <label className="text-xs uppercase text-muted-foreground mb-1 block">Краткое описание (авто, из первого абзаца)</label>
+            <div className="text-sm rounded-xl border border-border/60 bg-muted/40 px-3 py-2.5 min-h-[52px] leading-relaxed">
+              {makeTextFromContent(editing.content) || <span className="text-muted-foreground">Начните вводить полный текст — краткое описание подставится автоматически</span>}
+            </div>
+          </div>
           <div>
             <label className="text-xs uppercase text-muted-foreground mb-1 block">Главная картинка</label>
             {editing.image && (
