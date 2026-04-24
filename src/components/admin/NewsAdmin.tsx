@@ -9,6 +9,7 @@ import { toast } from '@/hooks/use-toast';
 import { NEWS_URL, ARCHIVE_URL, NewsItem, NewsImageUpload } from './adminTypes';
 import { compressImage } from './imageCompress';
 import UploadProgress from './UploadProgress';
+import AdaptiveImage from '@/components/site/AdaptiveImage';
 
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
@@ -260,8 +261,15 @@ const NewsAdmin = ({ token }: { token: string }) => {
           <div>
             <label className="text-xs uppercase text-muted-foreground mb-1 block">Главная картинка</label>
             {editing.image && (
-              <div className="mb-3 aspect-[16/9] rounded-xl overflow-hidden max-w-md border border-border/60">
-                <img src={editing.image} alt="превью" className="w-full h-full object-cover" />
+              <div className="mb-3 max-w-md">
+                <AdaptiveImage
+                  src={editing.image}
+                  alt="превью"
+                  mode="fit"
+                  maxHeightClass="max-h-80"
+                  wrapperClassName="rounded-xl border border-border/60"
+                />
+                <div className="text-[11px] text-muted-foreground mt-1.5">Так фото будет отображаться на странице новости</div>
               </div>
             )}
             {uploading && <UploadProgress current={uploading.current} total={uploading.total} />}

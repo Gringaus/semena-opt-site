@@ -9,6 +9,7 @@ import { SortableList } from '@/components/admin/SortableList';
 import { CATALOG_URL, CatalogItem } from './adminTypes';
 import { compressImage } from './imageCompress';
 import UploadProgress from './UploadProgress';
+import AdaptiveImage from '@/components/site/AdaptiveImage';
 
 const CatalogAdmin = ({ token }: { token: string }) => {
   const [items, setItems] = useState<CatalogItem[]>([]);
@@ -107,8 +108,11 @@ const CatalogAdmin = ({ token }: { token: string }) => {
           <div>
             <label className="text-xs uppercase text-muted-foreground mb-1 block">Картинка категории</label>
             {editing.img && (
-              <div className="mb-3 aspect-[4/3] rounded-xl overflow-hidden max-w-xs border border-border/60">
-                <img src={editing.img} alt="превью" className="w-full h-full object-cover" />
+              <div className="mb-3 max-w-xs">
+                <div className="aspect-[4/3] rounded-xl overflow-hidden border border-border/60">
+                  <AdaptiveImage src={editing.img} alt="превью" mode="cover-smart" />
+                </div>
+                <div className="text-[11px] text-muted-foreground mt-1.5">Превью карточки каталога (4:3, обрезается по центру)</div>
               </div>
             )}
             {uploading && <UploadProgress current={uploading.current} total={uploading.total} />}
