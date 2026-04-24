@@ -60,7 +60,12 @@ const ArchiveAdmin = ({ token }: { token: string }) => {
               )}
               <div className="flex-1 min-w-0">
                 <div className="text-xs text-muted-foreground mb-1">{a.date}</div>
-                <div className="font-display text-base sm:text-lg line-clamp-2 sm:truncate">{a.title}</div>
+                <div className="font-display text-base sm:text-lg leading-tight line-clamp-2 mb-1">{a.title}</div>
+                {a.content && (
+                  <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                    {(typeof a.content === 'string' ? a.content : (a.content as unknown as string[]).join(' ')).replace(/\s+/g, ' ').trim()}
+                  </div>
+                )}
               </div>
               <div className="flex gap-2 shrink-0">
                 <Button size="sm" variant="outline" className="rounded-full text-destructive" onClick={() => remove(a.id!)}>
