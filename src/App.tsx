@@ -11,7 +11,7 @@ import NewsPage from "./pages/NewsPage";
 import AdminPage from "./pages/AdminPage";
 import FaqPage from "./pages/FaqPage";
 import PrivacyPage from "./pages/PrivacyPage";
-import NotFound from "./pages/NotFound";
+import PageNotFound from "./pages/PageNotFound";
 import CookieBanner from "./components/site/CookieBanner";
 
 const queryClient = new QueryClient();
@@ -31,7 +31,7 @@ const App = () => (
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
         <CookieBanner />
       </BrowserRouter>
