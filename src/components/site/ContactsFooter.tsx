@@ -151,9 +151,7 @@ const ContactsFooter = () => {
               />
             </div>
             <div className="mt-4 sm:mt-5 flex flex-col sm:flex-row flex-wrap items-start sm:items-center sm:justify-between gap-3 sm:gap-4">
-              <div className="text-sm opacity-70">
-                Приезжайте к нам на склад или закажите доставку в любой регион.
-              </div>
+              <div className="text-sm opacity-70">Приезжайте к нам на склад или закажите доставку по Иванову и области.</div>
               <a
                 href="https://yandex.ru/maps/?rtext=~57.006451,40.948929&rtt=auto"
                 target="_blank"
