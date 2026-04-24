@@ -20,6 +20,11 @@ const ScrollToTop = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (location.hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname, location.hash]);
+
   if (location.pathname.startsWith('/admin')) return null;
 
   const handleClick = () => {
