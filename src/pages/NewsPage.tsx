@@ -160,7 +160,7 @@ const NewsPage = () => {
           </Link>
 
           <div className="flex items-center flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
-            <Badge className={`rounded-full border-0 ${item.tag === 'Поступление' ? 'bg-[hsl(var(--lime))]/30 text-[hsl(var(--forest))]' : 'bg-[hsl(var(--earth))]/20 text-[hsl(var(--earth))]'}`}>
+            <Badge className={`rounded-full border-0 font-semibold ${item.tag === 'Поступление' ? 'bg-[hsl(var(--lime))]/60 text-[hsl(var(--forest))]' : 'bg-[hsl(var(--earth))] text-white'}`}>
               {item.tag}
             </Badge>
             <time className="text-xs uppercase tracking-wider text-muted-foreground">{item.date}</time>

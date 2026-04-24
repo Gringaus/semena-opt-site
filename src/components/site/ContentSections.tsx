@@ -127,7 +127,7 @@ const ContentSections = () => {
                 )}
                 <div className="p-5 sm:p-7 flex-1 flex flex-col">
                   <div className="flex items-center justify-between mb-4 sm:mb-6 gap-2">
-                    <Badge className={`rounded-full border-0 ${n.tag === 'Поступление' ? 'bg-[hsl(var(--lime))]/30 text-[hsl(var(--forest))]' : 'bg-[hsl(var(--earth))]/20 text-[hsl(var(--earth))]'}`}>
+                    <Badge className={`rounded-full border-0 font-semibold ${n.tag === 'Поступление' ? 'bg-[hsl(var(--lime))]/60 text-[hsl(var(--forest))]' : 'bg-[hsl(var(--earth))] text-white'}`}>
                       {n.tag}
                     </Badge>
                     <span className="text-xs uppercase tracking-wider text-muted-foreground">{n.date}</span>

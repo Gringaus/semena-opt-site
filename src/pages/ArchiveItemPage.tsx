@@ -168,7 +168,7 @@ const ArchiveItemPage = () => {
           <div className="grid lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12">
             <article className="lg:col-span-8">
               <div className="flex items-center flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
-                <Badge className="rounded-full border-0 bg-[hsl(var(--earth))]/20 text-[hsl(var(--earth))]">
+                <Badge className="rounded-full border-0 font-semibold bg-[hsl(var(--earth))] text-white">
                   Архив
                 </Badge>
                 <time className="text-xs uppercase tracking-wider text-muted-foreground">{item.date}</time>
