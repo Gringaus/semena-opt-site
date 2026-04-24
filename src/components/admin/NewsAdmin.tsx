@@ -165,13 +165,17 @@ const NewsAdmin = ({ token }: { token: string }) => {
     if (!confirm(`Перенести новость «${n.title}» в архив?`)) return;
     setLoading(true);
     try {
+      const existing = await fetch(ARCHIVE_URL).then((r) => r.json()).catch(() => ({ items: [] }));
+      const minSort = Array.isArray(existing.items) && existing.items.length
+        ? Math.min(...existing.items.map((it: { sort?: number }) => Number(it.sort) || 0))
+        : 1;
       const archivePayload = {
         date: n.date || '',
         title: n.title || '',
         content: typeof n.content === 'string' ? n.content : (Array.isArray(n.content) ? (n.content as string[]).join('\n\n') : ''),
         image: n.image && !n.image.startsWith('data:') ? n.image : '',
         images: (n.images || []).filter((s) => !s.startsWith('data:')),
-        sort: 0,
+        sort: minSort - 1,
       };
       const res = await fetch(ARCHIVE_URL, {
         method: 'POST',

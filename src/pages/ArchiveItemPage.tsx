@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
-import { archive as archiveFallback, ARCHIVE_API_URL, CONTACT_API_URL } from '@/components/site/data';
+import { ARCHIVE_API_URL, CONTACT_API_URL } from '@/components/site/data';
 import SiteLogo from '@/components/site/SiteLogo';
 import AdaptiveImage from '@/components/site/AdaptiveImage';
 import useDocumentMeta from '@/hooks/useDocumentMeta';
@@ -17,7 +17,8 @@ interface ArchiveItem { slug: string; date: string; title: string; content?: str
 
 const ArchiveItemPage = () => {
   const { slug } = useParams();
-  const [archive, setArchive] = useState<ArchiveItem[]>(archiveFallback);
+  const [archive, setArchive] = useState<ArchiveItem[]>([]);
+  const [loaded, setLoaded] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const [requestOpen, setRequestOpen] = useState(false);
   const [form, setForm] = useState({ name: '', phone: '', email: '' });
@@ -25,10 +26,13 @@ const ArchiveItemPage = () => {
   const [agree, setAgree] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
     fetch(ARCHIVE_API_URL)
       .then((r) => r.json())
-      .then((d) => { if (d.items?.length) setArchive(d.items); })
-      .catch(() => {});
+      .then((d) => { if (!cancelled) setArchive(Array.isArray(d.items) ? d.items : []); })
+      .catch(() => { if (!cancelled) setArchive([]); })
+      .finally(() => { if (!cancelled) setLoaded(true); });
+    return () => { cancelled = true; };
   }, []);
 
   const item = archive.find((a) => a.slug === slug);
@@ -125,7 +129,12 @@ const ArchiveItemPage = () => {
         </div>
       </header>
 
-      {!item ? (
+      {!loaded ? (
+        <section className="container py-16 sm:py-24 lg:py-32 text-center text-muted-foreground">
+          <Icon name="Loader2" size={32} className="animate-spin mx-auto mb-4" />
+          Загружаем запись...
+        </section>
+      ) : !item ? (
         <section className="container py-16 sm:py-24 lg:py-32 text-center">
           <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6">Запись не найдена</h1>
           <p className="text-muted-foreground mb-6 sm:mb-8">Возможно, запись была удалена или перемещена.</p>

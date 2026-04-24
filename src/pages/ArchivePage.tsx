@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
-import { archive as archiveFallback, ARCHIVE_API_URL } from '@/components/site/data';
+import { ARCHIVE_API_URL } from '@/components/site/data';
 import SiteLogo from '@/components/site/SiteLogo';
 import useDocumentMeta from '@/hooks/useDocumentMeta';
 
 interface ArchiveItem { slug: string; date: string; title: string; image?: string }
 
 const ArchivePage = () => {
-  const [items, setItems] = useState<ArchiveItem[]>(archiveFallback);
+  const [items, setItems] = useState<ArchiveItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useDocumentMeta({
     title: 'Архив новостей',
@@ -26,10 +27,13 @@ const ArchivePage = () => {
   });
 
   useEffect(() => {
+    let cancelled = false;
     fetch(ARCHIVE_API_URL)
       .then((r) => r.json())
-      .then((d) => { if (d.items?.length) setItems(d.items); })
-      .catch(() => {});
+      .then((d) => { if (!cancelled) setItems(Array.isArray(d.items) ? d.items : []); })
+      .catch(() => { if (!cancelled) setItems([]); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, []);
 
   return (
@@ -57,6 +61,17 @@ const ArchivePage = () => {
           </p>
         </div>
 
+        {loading ? (
+          <div className="py-16 text-center text-muted-foreground">
+            <Icon name="Loader2" size={28} className="animate-spin mx-auto mb-3" />
+            Загружаем архив...
+          </div>
+        ) : items.length === 0 ? (
+          <div className="py-16 text-center text-muted-foreground border-y border-border/60">
+            <Icon name="FileText" size={28} className="mx-auto mb-3 opacity-60" />
+            В архиве пока нет записей.
+          </div>
+        ) : (
         <div className="divide-y divide-border/60 border-y border-border/60">
           {items.map((a, i) => (
             <Link
@@ -83,6 +98,7 @@ const ArchivePage = () => {
             </Link>
           ))}
         </div>
+        )}
       </main>
     </div>
   );
