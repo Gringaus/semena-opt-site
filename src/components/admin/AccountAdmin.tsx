@@ -77,14 +77,14 @@ const AccountAdmin = ({ token, onCredentialsChanged }: Props) => {
   };
 
   return (
-    <Card className="p-8 rounded-3xl max-w-xl">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-full bg-[hsl(var(--forest))] grid place-items-center">
+    <Card className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl max-w-xl">
+      <div className="flex items-center gap-3 mb-5 sm:mb-6">
+        <div className="w-10 h-10 rounded-full bg-[hsl(var(--forest))] grid place-items-center shrink-0">
           <Icon name="UserCog" size={20} className="text-[hsl(var(--lime))]" />
         </div>
-        <div>
-          <h2 className="font-display text-2xl">Учётные данные</h2>
-          <p className="text-sm text-muted-foreground">
+        <div className="min-w-0">
+          <h2 className="font-display text-xl sm:text-2xl">Учётные данные</h2>
+          <p className="text-sm text-muted-foreground truncate">
             Текущий логин: <b>{currentLogin || '—'}</b>
           </p>
         </div>

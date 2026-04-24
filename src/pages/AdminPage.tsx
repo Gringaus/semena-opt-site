@@ -54,13 +54,13 @@ const AdminPage = () => {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-background grid place-items-center p-6">
-        <Card className="w-full max-w-md p-8 rounded-3xl">
-          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-2">
+      <div className="min-h-screen bg-background grid place-items-center p-4 sm:p-6">
+        <Card className="w-full max-w-md p-5 sm:p-8 rounded-2xl sm:rounded-3xl">
+          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground mb-4 sm:mb-6 inline-flex items-center gap-2">
             <Icon name="ArrowLeft" size={16} /> На сайт
           </Link>
-          <h1 className="font-display text-3xl mb-2">Админка</h1>
-          <p className="text-sm text-muted-foreground mb-6">Введите логин и пароль</p>
+          <h1 className="font-display text-2xl sm:text-3xl mb-1 sm:mb-2">Админка</h1>
+          <p className="text-sm text-muted-foreground mb-4 sm:mb-6">Введите логин и пароль</p>
           <form onSubmit={doLogin} className="space-y-4">
             <div>
               <Label className="mb-1 block">Логин</Label>
@@ -105,24 +105,26 @@ const AdminPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border/60">
-        <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-2">
-              <Icon name="ArrowLeft" size={16} /> На сайт
+        <div className="container flex items-center justify-between h-14 sm:h-16 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 sm:gap-2 shrink-0">
+              <Icon name="ArrowLeft" size={16} />
+              <span className="hidden sm:inline">На сайт</span>
             </Link>
-            <span className="text-muted-foreground">/</span>
-            <div className="font-display text-xl">Админка</div>
+            <span className="hidden sm:inline text-muted-foreground">/</span>
+            <div className="font-display text-lg sm:text-xl truncate">Админка</div>
           </div>
-          <Button variant="ghost" onClick={logout} className="rounded-full">
-            <Icon name="LogOut" size={16} /> Выйти
+          <Button variant="ghost" onClick={logout} className="rounded-full h-9 sm:h-10 px-3 sm:px-4 text-sm shrink-0">
+            <Icon name="LogOut" size={16} />
+            <span className="hidden sm:inline">Выйти</span>
           </Button>
         </div>
-        <div className="container flex gap-2 pb-3 flex-wrap">
+        <div className="container flex gap-2 pb-3 overflow-x-auto flex-nowrap sm:flex-wrap -mx-1 px-1 scrollbar-none">
           {tabs.map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`px-4 py-2 text-sm rounded-full transition-colors ${
+              className={`shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 text-sm rounded-full transition-colors ${
                 tab === t ? 'bg-[hsl(var(--forest))] text-[hsl(var(--cream))]' : 'hover:bg-muted'
               }`}
             >
@@ -132,7 +134,7 @@ const AdminPage = () => {
         </div>
       </header>
 
-      <main className="container py-10">
+      <main className="container py-6 sm:py-10">
         {tab === 'news' && <NewsAdmin token={token} />}
         {tab === 'archive' && <ArchiveAdmin token={token} />}
         {tab === 'catalog' && <CatalogAdmin token={token} />}
