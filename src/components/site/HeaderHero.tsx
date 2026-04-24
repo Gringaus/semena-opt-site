@@ -23,9 +23,20 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
   const [pill, setPill] = useState<{ left: number; width: number; visible: boolean }>({ left: 0, width: 0, visible: false });
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const pendingNavRef = useRef<string | null>(null);
+
   const handleMobileNav = (id: string) => {
+    pendingNavRef.current = id;
     setMenuOpen(false);
-    setTimeout(() => scroll(id), 50);
+  };
+
+  const handleMenuOpenChange = (open: boolean) => {
+    setMenuOpen(open);
+    if (!open && pendingNavRef.current) {
+      const id = pendingNavRef.current;
+      pendingNavRef.current = null;
+      setTimeout(() => scroll(id), 250);
+    }
   };
 
   useLayoutEffect(() => {
@@ -59,7 +70,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
         <div className="container flex items-center justify-between h-14 sm:h-16 gap-3">
           <SiteLogo to="" />
 
-          <nav ref={navRef} className="hidden lg:flex items-center gap-1 relative">
+          <nav ref={navRef} className="hidden md:flex items-center gap-1 relative">
             <span
               aria-hidden="true"
               className="absolute top-0 h-full rounded-full bg-[hsl(var(--forest))] transition-all duration-300 ease-out pointer-events-none"
@@ -75,7 +86,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                 key={n.id}
                 ref={(el) => { itemRefs.current[n.id] = el; }}
                 onClick={() => scroll(n.id)}
-                className={`relative z-10 px-4 py-2 text-sm rounded-full transition-colors duration-200 ${
+                className={`relative z-10 px-2.5 lg:px-4 py-2 text-xs lg:text-sm rounded-full transition-colors duration-200 whitespace-nowrap ${
                   active === n.id
                     ? "text-[hsl(var(--cream))]"
                     : "text-foreground hover:text-[hsl(var(--forest))]"
@@ -86,12 +97,12 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <Dialog open={menuOpen} onOpenChange={setMenuOpen}>
+            <Dialog open={menuOpen} onOpenChange={handleMenuOpenChange}>
               <DialogTrigger asChild>
                 <Button
                   variant="outline"
                   aria-label="Открыть меню"
-                  className="lg:hidden rounded-full h-10 w-10 p-0 border-foreground/20"
+                  className="md:hidden rounded-full h-10 w-10 p-0 border-foreground/20"
                 >
                   <Icon name="Menu" size={20} />
                 </Button>

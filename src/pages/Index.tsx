@@ -24,24 +24,40 @@ const Index = () => {
     },
   });
 
+  const getHeaderOffset = () => (window.innerWidth >= 640 ? 96 : 80);
+
+  const scrollToSection = (id: string, smooth = true) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
+    window.scrollTo({ top: Math.max(0, top), behavior: smooth ? 'smooth' : 'auto' });
+  };
+
   const scroll = (id: string) => {
     setActive(id);
     const el = document.getElementById(id);
     if (!el) return;
-    lockUntilRef.current = Date.now() + 900;
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    lockUntilRef.current = Date.now() + 1200;
+    scrollToSection(id, true);
     if (history.replaceState) history.replaceState(null, '', `#${id}`);
   };
 
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
-    if (hash && nav.some((n) => n.id === hash)) {
-      lockUntilRef.current = Date.now() + 900;
-      setTimeout(() => {
-        document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        setActive(hash);
-      }, 100);
-    }
+    if (!hash || !nav.some((n) => n.id === hash)) return;
+    lockUntilRef.current = Date.now() + 1500;
+    setActive(hash);
+    let attempts = 0;
+    const tryScroll = () => {
+      const el = document.getElementById(hash);
+      if (el) {
+        scrollToSection(hash, false);
+        requestAnimationFrame(() => scrollToSection(hash, true));
+        return;
+      }
+      if (attempts++ < 20) setTimeout(tryScroll, 80);
+    };
+    tryScroll();
   }, []);
 
   useEffect(() => {

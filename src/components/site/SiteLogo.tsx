@@ -19,9 +19,9 @@ const SiteLogo = ({ to = '/', className = '' }: SiteLogoProps) => {
           </svg>
         </div>
       )}
-      <div className="leading-tight">
+      <div className="leading-tight min-w-0">
         <div className="font-display text-xl font-semibold">Семена Оптом</div>
-        <div className="text-[10px] uppercase tracking-wide text-muted-foreground max-w-[260px]">
+        <div className="text-[10px] uppercase tracking-wide text-muted-foreground max-w-[260px] hidden sm:block md:hidden lg:block">
           магазин для юридических лиц и индивидуальных предпринимателей
         </div>
       </div>
