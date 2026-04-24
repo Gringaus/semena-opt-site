@@ -141,6 +141,19 @@ const NewsPage = () => {
         </section>
       ) : (
         <article className="container py-10 sm:py-16 lg:py-24 max-w-3xl">
+          <nav aria-label="Хлебные крошки" className="mb-6 sm:mb-8 text-sm">
+            <ol className="flex items-center flex-wrap gap-1.5 text-muted-foreground">
+              <li>
+                <Link to="/" className="hover:text-foreground transition-colors">Главная</Link>
+              </li>
+              <li aria-hidden="true"><Icon name="ChevronRight" size={14} className="opacity-60" /></li>
+              <li>
+                <Link to="/#news" className="hover:text-foreground transition-colors">Новости</Link>
+              </li>
+              <li aria-hidden="true"><Icon name="ChevronRight" size={14} className="opacity-60" /></li>
+              <li className="text-foreground font-medium line-clamp-1 max-w-[16ch] sm:max-w-[32ch]" aria-current="page">{item.title}</li>
+            </ol>
+          </nav>
           <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 sm:mb-10 transition-colors">
             <Icon name="ArrowLeft" size={16} />
             Ко всем новостям
