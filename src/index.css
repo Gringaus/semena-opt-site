@@ -104,6 +104,14 @@
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "ss01", "cv11";
   }
+  html.cookie-banner-visible body {
+    padding-bottom: 280px;
+  }
+  @media (min-width: 768px) {
+    html.cookie-banner-visible body {
+      padding-bottom: 0;
+    }
+  }
   h1,
   h2,
   h3,

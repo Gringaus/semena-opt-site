@@ -20,6 +20,18 @@ const CookieBanner = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    if (visible) {
+      root.classList.add('cookie-banner-visible');
+    } else {
+      root.classList.remove('cookie-banner-visible');
+    }
+    return () => {
+      root.classList.remove('cookie-banner-visible');
+    };
+  }, [visible]);
+
   const accept = () => {
     try { localStorage.setItem(STORAGE_KEY, 'accepted'); } catch { /* ignore */ }
     setVisible(false);
