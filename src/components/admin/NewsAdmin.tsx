@@ -58,10 +58,12 @@ const NewsAdmin = ({ token }: { token: string }) => {
   const [editing, setEditing] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState<{ current: number; total: number } | null>(null);
+  const [homeLimit, setHomeLimit] = useState<number>(3);
 
   const load = async () => {
     const res = await fetch(NEWS_URL);
     const data = await res.json();
+    if (typeof data.homeLimit === 'number' && data.homeLimit > 0) setHomeLimit(data.homeLimit);
     setItems((data.items || []).map((n: NewsItem & { content?: string[] | string }) => ({ ...n, content: Array.isArray(n.content) ? n.content.join('\n\n') : (n.content || '') })));
   };
 
@@ -207,6 +209,13 @@ const NewsAdmin = ({ token }: { token: string }) => {
         <Button onClick={() => setEditing({ date: isoToLabel(todayIso()), tag: 'Новость', title: '', text: '', content: '', image: '', published: true, images: [], imagesUploads: [] })} className="w-full sm:w-auto rounded-full bg-[hsl(var(--forest))] text-[hsl(var(--cream))]">
           <Icon name="Plus" size={16} /> Добавить
         </Button>
+      </div>
+
+      <div className="flex items-start gap-3 p-3 sm:p-4 rounded-xl bg-[hsl(var(--lime))]/15 border border-[hsl(var(--lime))]/40 text-sm">
+        <Icon name="Info" size={18} className="text-[hsl(var(--forest))] shrink-0 mt-0.5" />
+        <div className="text-[hsl(var(--forest))]">
+          На главной странице показывается до <b>{homeLimit}</b> свежих новостей. Как только вы добавляете новую, самая старая автоматически переносится в «Архив».
+        </div>
       </div>
 
       {editing && (
