@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
 import { NEWS_URL, NewsItem, NewsImageUpload } from './adminTypes';
+import { compressImage } from './imageCompress';
 
 const MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
@@ -53,34 +54,32 @@ const NewsAdmin = ({ token }: { token: string }) => {
 
   useEffect(() => { load(); }, []);
 
-  const onNewsImg = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      const base64 = result.split(',')[1];
-      setEditing((prev) => prev ? { ...prev, imageBase64: base64, imageFilename: file.name, imageContentType: file.type, image: result } : prev);
-    };
-    reader.readAsDataURL(file);
+  const onNewsImg = async (file: File) => {
+    try {
+      const c = await compressImage(file);
+      setEditing((prev) => prev ? { ...prev, imageBase64: c.base64, imageFilename: c.filename, imageContentType: c.contentType, image: c.dataUrl } : prev);
+    } catch {
+      toast({ title: 'Не удалось обработать фото', variant: 'destructive' });
+    }
   };
 
-  const onGalleryFiles = (files: FileList) => {
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result as string;
-        const base64 = result.split(',')[1];
+  const onGalleryFiles = async (files: FileList) => {
+    for (const file of Array.from(files)) {
+      try {
+        const c = await compressImage(file);
         setEditing((prev) => {
           if (!prev) return prev;
-          const upload: NewsImageUpload = { base64, filename: file.name, contentType: file.type };
+          const upload: NewsImageUpload = { base64: c.base64, filename: c.filename, contentType: c.contentType };
           return {
             ...prev,
-            images: [...(prev.images || []), result],
+            images: [...(prev.images || []), c.dataUrl],
             imagesUploads: [...(prev.imagesUploads || []), upload],
           };
         });
-      };
-      reader.readAsDataURL(file);
-    });
+      } catch {
+        toast({ title: `Ошибка обработки ${file.name}`, variant: 'destructive' });
+      }
+    }
   };
 
   const removeGalleryImage = (idx: number) => {

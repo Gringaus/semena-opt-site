@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
 import { SortableList } from '@/components/admin/SortableList';
 import { CATALOG_URL, CatalogItem } from './adminTypes';
+import { compressImage } from './imageCompress';
 
 const CatalogAdmin = ({ token }: { token: string }) => {
   const [items, setItems] = useState<CatalogItem[]>([]);
@@ -21,14 +22,13 @@ const CatalogAdmin = ({ token }: { token: string }) => {
 
   useEffect(() => { load(); }, []);
 
-  const onImgFile = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      const base64 = result.split(',')[1];
-      setEditing((prev) => prev ? { ...prev, imgBase64: base64, imgFilename: file.name, imgContentType: file.type, img: result } : prev);
-    };
-    reader.readAsDataURL(file);
+  const onImgFile = async (file: File) => {
+    try {
+      const c = await compressImage(file);
+      setEditing((prev) => prev ? { ...prev, imgBase64: c.base64, imgFilename: c.filename, imgContentType: c.contentType, img: c.dataUrl } : prev);
+    } catch {
+      toast({ title: 'Не удалось обработать фото', variant: 'destructive' });
+    }
   };
 
   const save = async () => {
