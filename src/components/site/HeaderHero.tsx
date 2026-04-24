@@ -79,7 +79,9 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
     <>
       <header className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/60">
         <div className="container flex items-center justify-between h-14 sm:h-16 gap-2 md:gap-3">
-          <SiteLogo to="" />
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <SiteLogo to="" />
+          </div>
 
           <nav ref={navRef} className="hidden md:flex items-center gap-0 lg:gap-1 relative">
             <span
@@ -107,7 +109,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
               </button>
             ))}
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <Dialog open={menuOpen} onOpenChange={handleMenuOpenChange}>
               <DialogTrigger asChild>
                 <Button
@@ -161,10 +163,10 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
               <DialogTrigger asChild>
                 <Button
                   aria-label="Связаться с нами"
-                  className="bg-[hsl(var(--earth))] hover:bg-[hsl(var(--earth))]/90 text-white rounded-full h-10 px-3 sm:px-4 md:w-10 md:px-0 lg:w-auto lg:px-4 text-sm"
+                  className="bg-[hsl(var(--earth))] hover:bg-[hsl(var(--earth))]/90 text-white rounded-full h-10 w-10 p-0 sm:w-auto sm:px-4 md:w-10 md:px-0 lg:w-auto lg:px-4 text-sm"
                 >
                   <Icon name="Phone" size={16} />
-                  <span className="inline sm:inline md:hidden lg:inline">Связаться</span>
+                  <span className="hidden sm:inline md:hidden lg:inline">Связаться</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="rounded-3xl w-[calc(100vw-1.5rem)] max-w-md p-5 sm:p-6">
