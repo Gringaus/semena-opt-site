@@ -4,11 +4,26 @@ import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { archive as archiveFallback, ARCHIVE_API_URL } from '@/components/site/data';
 import SiteLogo from '@/components/site/SiteLogo';
+import useDocumentMeta from '@/hooks/useDocumentMeta';
 
 interface ArchiveItem { slug: string; date: string; title: string; image?: string }
 
 const ArchivePage = () => {
   const [items, setItems] = useState<ArchiveItem[]>(archiveFallback);
+
+  useDocumentMeta({
+    title: 'Архив новостей',
+    description: 'Архив поступлений, событий и новостей магазина «Семена Оптом». Все прошлые партии семян, отраслевые события и обновления компании в одном месте.',
+    ogType: 'website',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: 'Архив новостей — Семена Оптом',
+      description: 'Архив поступлений, событий и новостей магазина «Семена Оптом».',
+      inLanguage: 'ru-RU',
+    },
+    jsonLdId: 'archive-page-jsonld',
+  });
 
   useEffect(() => {
     fetch(ARCHIVE_API_URL)
@@ -31,7 +46,7 @@ const ArchivePage = () => {
         </div>
       </header>
 
-      <section className="container py-12 sm:py-20 lg:py-32">
+      <main className="container py-12 sm:py-20 lg:py-32">
         <div className="mb-8 sm:mb-12">
           <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--earth))] mb-2 sm:mb-3">Архив</div>
           <h1 className="font-display text-4xl sm:text-5xl lg:text-7xl leading-[0.95]">
@@ -60,7 +75,7 @@ const ArchivePage = () => {
                   </div>
                 )}
                 <div className="min-w-0">
-                  <div className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground mb-0.5 sm:mb-1">{a.date}</div>
+                  <time className="text-[10px] sm:text-xs uppercase tracking-wider text-muted-foreground mb-0.5 sm:mb-1 block">{a.date}</time>
                   <div className="font-display text-base sm:text-xl leading-tight line-clamp-2 sm:truncate">{a.title}</div>
                 </div>
               </div>
@@ -68,7 +83,7 @@ const ArchivePage = () => {
             </Link>
           ))}
         </div>
-      </section>
+      </main>
     </div>
   );
 };

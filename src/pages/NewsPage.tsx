@@ -11,6 +11,7 @@ import { toast } from '@/hooks/use-toast';
 import { news as newsFallback, NEWS_API_URL, CONTACT_API_URL } from '@/components/site/data';
 import SiteLogo from '@/components/site/SiteLogo';
 import AdaptiveImage from '@/components/site/AdaptiveImage';
+import useDocumentMeta from '@/hooks/useDocumentMeta';
 
 interface NewsItem { slug: string; date: string; tag: string; title: string; text: string; content?: string[]; image?: string; images?: string[] }
 
@@ -32,6 +33,29 @@ const NewsPage = () => {
 
   const item = items.find((n) => n.slug === slug);
   const gallery = item?.images || [];
+
+  useDocumentMeta({
+    title: item ? item.title : 'Новость не найдена',
+    description: item ? item.text : 'Страница новости не найдена.',
+    ogType: 'article',
+    ogImage: item?.image,
+    robots: item ? 'index, follow' : 'noindex, follow',
+    jsonLd: item ? {
+      '@context': 'https://schema.org',
+      '@type': 'NewsArticle',
+      headline: item.title,
+      description: item.text,
+      image: item.image ? [item.image] : undefined,
+      datePublished: item.date,
+      inLanguage: 'ru-RU',
+      publisher: {
+        '@type': 'Organization',
+        name: 'Семена Оптом',
+        url: 'https://semena37.ru',
+      },
+    } : null,
+    jsonLdId: 'news-article-jsonld',
+  });
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -100,6 +124,7 @@ const NewsPage = () => {
         </div>
       </header>
 
+      <main>
       {!item ? (
         <section className="container py-16 sm:py-24 lg:py-32 text-center">
           <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6">Новость не найдена</h1>
@@ -121,7 +146,7 @@ const NewsPage = () => {
             <Badge className={`rounded-full border-0 ${item.tag === 'Поступление' ? 'bg-[hsl(var(--lime))]/30 text-[hsl(var(--forest))]' : 'bg-[hsl(var(--earth))]/20 text-[hsl(var(--earth))]'}`}>
               {item.tag}
             </Badge>
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">{item.date}</span>
+            <time className="text-xs uppercase tracking-wider text-muted-foreground">{item.date}</time>
           </div>
 
           <h1 className="font-display text-3xl sm:text-4xl lg:text-6xl leading-[1.05] lg:leading-[1] mb-6 sm:mb-8">{item.title}</h1>
@@ -195,6 +220,7 @@ const NewsPage = () => {
           </div>
         </article>
       )}
+      </main>
 
       <Dialog open={requestOpen} onOpenChange={(o) => { if (!o) closeRequest(); }}>
         <DialogContent className="rounded-2xl sm:rounded-3xl w-[calc(100vw-1.5rem)] max-w-md p-5 sm:p-6">
