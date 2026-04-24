@@ -25,6 +25,15 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
 
   const pendingNavRef = useRef<string | null>(null);
 
+  const runPendingNav = () => {
+    const id = pendingNavRef.current;
+    if (!id) return;
+    pendingNavRef.current = null;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => scroll(id));
+    });
+  };
+
   const handleMobileNav = (id: string) => {
     pendingNavRef.current = id;
     setMenuOpen(false);
@@ -32,12 +41,14 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
 
   const handleMenuOpenChange = (open: boolean) => {
     setMenuOpen(open);
-    if (!open && pendingNavRef.current) {
-      const id = pendingNavRef.current;
-      pendingNavRef.current = null;
-      setTimeout(() => scroll(id), 250);
-    }
   };
+
+  useEffect(() => {
+    if (menuOpen) return;
+    if (!pendingNavRef.current) return;
+    const t = setTimeout(() => runPendingNav(), 350);
+    return () => clearTimeout(t);
+  }, [menuOpen]);
 
   useLayoutEffect(() => {
     const btn = itemRefs.current[active];
@@ -107,7 +118,15 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                   <Icon name="Menu" size={20} />
                 </Button>
               </DialogTrigger>
-              <DialogContent className="rounded-3xl w-[calc(100vw-1.5rem)] max-w-md p-5 sm:p-6">
+              <DialogContent
+                className="rounded-3xl w-[calc(100vw-1.5rem)] max-w-md p-5 sm:p-6"
+                onCloseAutoFocus={(e) => {
+                  if (pendingNavRef.current) e.preventDefault();
+                }}
+                onAnimationEnd={() => {
+                  if (!menuOpen) runPendingNav();
+                }}
+              >
                 <DialogHeader>
                   <DialogTitle className="font-display text-2xl sm:text-3xl">Меню</DialogTitle>
                 </DialogHeader>
