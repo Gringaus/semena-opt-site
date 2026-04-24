@@ -37,11 +37,23 @@ const CookieBanner = () => {
     setVisible(false);
   };
 
+  const dismiss = () => {
+    setVisible(false);
+  };
+
   if (!visible) return null;
 
   return (
     <div className="fixed bottom-4 left-4 right-4 md:left-6 md:right-auto md:bottom-6 md:max-w-md z-[90]">
-      <div className="bg-[hsl(var(--forest))] text-[hsl(var(--cream))] rounded-3xl p-5 shadow-2xl border border-[hsl(var(--cream))]/10">
+      <div className="relative bg-[hsl(var(--forest))] text-[hsl(var(--cream))] rounded-3xl p-5 pr-12 shadow-2xl border border-[hsl(var(--cream))]/10">
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Закрыть"
+          className="absolute top-3 right-3 w-9 h-9 rounded-full grid place-items-center text-[hsl(var(--cream))]/70 hover:text-[hsl(var(--cream))] hover:bg-[hsl(var(--cream))]/10 transition-colors"
+        >
+          <Icon name="X" size={18} />
+        </button>
         <div className="flex items-start gap-3 mb-4">
           <div className="w-10 h-10 rounded-full bg-[hsl(var(--lime))]/20 grid place-items-center shrink-0">
             <Icon name="Cookie" size={20} className="text-[hsl(var(--lime))]" />
