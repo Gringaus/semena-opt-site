@@ -103,7 +103,7 @@ const ContentSections = () => {
         </div>
 
         <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          {news.map((n, i) => (
+          {news.slice(0, 3).map((n, i) => (
             <Link key={i} to={`/news/${n.slug}`} className="block h-full">
               <Card className="rounded-2xl sm:rounded-3xl border-border/60 hover:shadow-xl transition-all hover:-translate-y-1 bg-card group cursor-pointer h-full overflow-hidden flex flex-col">
                 {n.image && (

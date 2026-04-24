@@ -99,6 +99,7 @@ def handler(event, context):
                 )
                 new_id = cur.fetchone()[0]
                 conn.commit()
+            _archive_overflow(conn)
             return _json(200, {'id': new_id, 'image': image_url, 'images': images_list})
 
         if method == 'PUT':
@@ -133,6 +134,7 @@ def handler(event, context):
                     ),
                 )
                 conn.commit()
+            _archive_overflow(conn)
             return _json(200, {'ok': True, 'image': image_url, 'images': images_list})
 
         if method == 'DELETE':
@@ -148,6 +150,46 @@ def handler(event, context):
         return _json(405, {'error': 'Method Not Allowed'})
     finally:
         conn.close()
+
+
+MAX_NEWS_ON_HOME = 3
+
+
+def _archive_overflow(conn):
+    """Держим на главной не более 3 новостей. Лишние (самые старые) переносим в archive."""
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM news WHERE published = TRUE")
+            total = cur.fetchone()[0] or 0
+            if total <= MAX_NEWS_ON_HOME:
+                return
+            overflow = total - MAX_NEWS_ON_HOME
+            cur.execute(
+                """SELECT id, slug, date_label, title, text, content, image, images
+                   FROM news WHERE published = TRUE ORDER BY id ASC LIMIT %s""",
+                (overflow,),
+            )
+            rows = cur.fetchall() or []
+            cur.execute("SELECT COALESCE(MIN(sort_order), 1) FROM archive")
+            min_sort = cur.fetchone()[0] or 1
+            next_sort = int(min_sort) - 1
+            for r in rows:
+                nid, nslug, ndate, ntitle, ntext, ncontent, nimage, nimages = r
+                base_content = ncontent or ''
+                if ntext and ntext.strip():
+                    base_content = f"{ntext.strip()}\n\n{base_content}".strip()
+                images_json = json.dumps(nimages or [], ensure_ascii=False) if not isinstance(nimages, str) else (nimages or '[]')
+                cur.execute(
+                    """INSERT INTO archive (slug, date_label, title, content, image, sort_order, images)
+                       VALUES (%s, %s, %s, %s, %s, %s, %s::jsonb)""",
+                    (nslug or _slugify(ntitle or ''), ndate or '', ntitle or '',
+                     base_content, nimage or '', next_sort, images_json),
+                )
+                next_sort -= 1
+                cur.execute("DELETE FROM news WHERE id = %s", (nid,))
+            conn.commit()
+    except Exception:
+        conn.rollback()
 
 
 def _resolve_img(body, kind):
