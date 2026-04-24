@@ -9,7 +9,7 @@ import { toast } from "@/hooks/use-toast";
 import { CONTACT_API_URL } from "./data";
 import PhoneInput from "./PhoneInput";
 import { reachGoal, Goals } from "@/lib/metrika";
-import { isValidEmail, EMAIL_ERROR_TITLE, EMAIL_ERROR_DESC } from "@/lib/validators";
+import { isValidEmail, EMAIL_ERROR_TITLE, EMAIL_ERROR_DESC, isValidPhone, PHONE_ERROR_TITLE, PHONE_ERROR_DESC } from "@/lib/validators";
 
 const ContactsFooter = () => {
   const [form, setForm] = useState({
@@ -25,6 +25,10 @@ const ContactsFooter = () => {
     e.preventDefault();
     if (!form.name || !form.phone || !form.email || !form.message) {
       toast({ title: "Заполните все поля", variant: "destructive" });
+      return;
+    }
+    if (!isValidPhone(form.phone)) {
+      toast({ title: PHONE_ERROR_TITLE, description: PHONE_ERROR_DESC, variant: "destructive" });
       return;
     }
     if (!isValidEmail(form.email)) {

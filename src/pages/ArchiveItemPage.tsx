@@ -13,7 +13,7 @@ import SiteLogo from '@/components/site/SiteLogo';
 import AdaptiveImage from '@/components/site/AdaptiveImage';
 import PhoneInput from '@/components/site/PhoneInput';
 import useDocumentMeta from '@/hooks/useDocumentMeta';
-import { isValidEmail, EMAIL_ERROR_TITLE, EMAIL_ERROR_DESC } from '@/lib/validators';
+import { isValidEmail, EMAIL_ERROR_TITLE, EMAIL_ERROR_DESC, isValidPhone, PHONE_ERROR_TITLE, PHONE_ERROR_DESC } from '@/lib/validators';
 
 interface ArchiveItem { slug: string; date: string; title: string; content?: string[]; image?: string; images?: string[] }
 
@@ -86,6 +86,10 @@ const ArchiveItemPage = () => {
     if (!item) return;
     if (!form.name || !form.phone || !form.email) {
       toast({ title: 'Заполните все поля', variant: 'destructive' });
+      return;
+    }
+    if (!isValidPhone(form.phone)) {
+      toast({ title: PHONE_ERROR_TITLE, description: PHONE_ERROR_DESC, variant: 'destructive' });
       return;
     }
     if (!isValidEmail(form.email)) {
