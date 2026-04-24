@@ -28,8 +28,8 @@ const PageNotFound = () => {
             <Icon name="Sprout" size={14} />
             Ошибка 404
           </div>
-          <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-semibold text-[hsl(var(--forest))] mb-4 sm:mb-6 leading-none break-words">
-            Страница не&nbsp;взошла
+          <h1 className="font-display text-4xl sm:text-6xl lg:text-8xl font-semibold text-[hsl(var(--forest))] mb-4 sm:mb-6 leading-[1.05] sm:leading-none break-words">
+            Страница не взошла
           </h1>
           <p className="text-base sm:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-md mx-auto">
             Здесь пусто — этой страницы не существует или она переехала. Вернитесь на главную или загляните в каталог.

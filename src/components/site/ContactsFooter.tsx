@@ -107,14 +107,14 @@ const ContactsFooter = () => {
               <a
                 href="tel:+79206738383"
                 onClick={() => reachGoal(Goals.PhoneClick, { phone: '+79206738383', source: 'footer' })}
-                className="font-display text-xl sm:text-2xl lg:text-3xl mb-1 block hover:text-[hsl(var(--lime))] transition-colors"
+                className="font-display text-lg sm:text-2xl lg:text-3xl mb-1 block whitespace-nowrap hover:text-[hsl(var(--lime))] transition-colors"
               >
                 +7 (920) 673-83-83
               </a>
               <a
                 href="tel:+79203418866"
                 onClick={() => reachGoal(Goals.PhoneClick, { phone: '+79203418866', source: 'footer' })}
-                className="font-display text-xl sm:text-2xl lg:text-3xl mb-2 block hover:text-[hsl(var(--lime))] transition-colors"
+                className="font-display text-lg sm:text-2xl lg:text-3xl mb-2 block whitespace-nowrap hover:text-[hsl(var(--lime))] transition-colors"
               >
                 +7 (920) 341-88-66
               </a>
@@ -135,7 +135,7 @@ const ContactsFooter = () => {
               <a
                 href="mailto:semena.37@mail.ru"
                 onClick={() => reachGoal(Goals.EmailClick, { source: 'footer' })}
-                className="font-display text-xl sm:text-2xl lg:text-3xl mb-1 block hover:text-[hsl(var(--lime))] transition-colors break-all"
+                className="font-display text-lg sm:text-2xl lg:text-3xl mb-1 block hover:text-[hsl(var(--lime))] transition-colors break-all"
               >
                 semena.37@mail.ru
               </a>
