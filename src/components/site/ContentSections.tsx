@@ -207,7 +207,7 @@ const ContentSections = () => {
         </div>
       </section>
 
-      <Dialog open={!!selectedCategory} onOpenChange={(o) => { if (!o) closeDialog(); }}>
+      <Dialog open={!!selectedCategory} onOpenChange={(o) => { if (!o && !sending) closeDialog(); }}>
         <DialogContent className="rounded-2xl sm:rounded-3xl w-[calc(100vw-1.5rem)] max-w-lg p-0 overflow-hidden max-h-[92vh] overflow-y-auto">
           {selectedCategory && (
             <>

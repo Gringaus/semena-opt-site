@@ -278,7 +278,7 @@ const ArchiveItemPage = () => {
         </div>
       )}
 
-      <Dialog open={requestOpen} onOpenChange={(o) => { if (!o) closeRequest(); }}>
+      <Dialog open={requestOpen} onOpenChange={(o) => { if (!o && !sending) closeRequest(); }}>
         <DialogContent className="rounded-2xl sm:rounded-3xl w-[calc(100vw-1.5rem)] max-w-md p-5 sm:p-6">
           <DialogHeader>
             <DialogTitle className="font-display text-2xl sm:text-3xl">Запрос прайс-листа</DialogTitle>
