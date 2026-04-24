@@ -160,7 +160,16 @@ const NewsPage = () => {
                     onClick={() => setLightboxIdx(i)}
                     className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden group relative"
                   >
-                    <img src={img} alt={`${item.title} — фото ${i + 1}`} loading="lazy" decoding="async" width={400} height={400} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <AdaptiveImage
+                      src={img}
+                      alt={`${item.title} — фото ${i + 1}`}
+                      mode="cover-smart"
+                      loading="lazy"
+                      decoding="async"
+                      width={400}
+                      height={400}
+                      className="group-hover:scale-105 transition-transform duration-500"
+                    />
                     <div className="absolute inset-0 bg-[hsl(var(--forest))]/0 group-hover:bg-[hsl(var(--forest))]/30 transition-colors grid place-items-center">
                       <Icon name="Maximize2" size={24} className="text-[hsl(var(--cream))] opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>

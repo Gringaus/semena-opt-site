@@ -300,11 +300,11 @@ const NewsAdmin = ({ token }: { token: string }) => {
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                 {editing.images.map((img, i) => (
                   <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border/60 group">
-                    <img src={img} alt={`галерея ${i + 1}`} className="w-full h-full object-cover" />
+                    <AdaptiveImage src={img} alt={`галерея ${i + 1}`} mode="cover-smart" />
                     <button
                       type="button"
                       onClick={() => removeGalleryImage(i)}
-                      className="absolute top-1 right-1 w-7 h-7 rounded-full bg-destructive text-destructive-foreground grid place-items-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 w-7 h-7 rounded-full bg-destructive text-destructive-foreground grid place-items-center sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-10"
                     >
                       <Icon name="X" size={14} />
                     </button>
