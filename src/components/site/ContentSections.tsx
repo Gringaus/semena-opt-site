@@ -293,11 +293,11 @@ const ContentSections = () => {
                         Я согласен с <Link to="/privacy" target="_blank" className="underline hover:text-foreground">политикой конфиденциальности</Link> и даю согласие на обработку персональных данных.
                       </span>
                     </label>
-                    <div className="flex gap-3 pt-1">
-                      <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="rounded-full h-11 px-5 border-foreground/20">
+                    <div className="flex flex-col-reverse sm:flex-row gap-3 pt-1">
+                      <Button type="button" variant="outline" onClick={() => setShowForm(false)} className="rounded-full h-11 px-5 border-foreground/20 w-full sm:w-auto">
                         Назад
                       </Button>
-                      <Button type="submit" disabled={sending || !agree} className="flex-1 rounded-full h-11 bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))]">
+                      <Button type="submit" disabled={sending || !agree} className="flex-1 rounded-full h-11 bg-[hsl(var(--forest))] hover:bg-[hsl(var(--forest))]/90 text-[hsl(var(--cream))] whitespace-nowrap">
                         {sending ? 'Отправляем...' : 'Отправить заявку'}
                         <Icon name="Send" size={14} />
                       </Button>
