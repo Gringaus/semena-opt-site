@@ -19,6 +19,7 @@ import {
 } from './data';
 import { faqCategories } from './faq';
 import AdaptiveImage from './AdaptiveImage';
+import PhoneInput from './PhoneInput';
 import { reachGoal, Goals } from '@/lib/metrika';
 
 interface NewsApi { id?: number; slug: string; date: string; tag: string; title: string; text: string; content?: string[]; image?: string }
@@ -257,15 +258,15 @@ const ContentSections = () => {
                   <form onSubmit={submitRequest} className="space-y-3 pt-1">
                     <div>
                       <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Имя</label>
-                      <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ваше имя" className="h-11 rounded-xl" />
+                      <Input autoFocus autoComplete="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ваше имя" className="h-11 rounded-xl" />
                     </div>
                     <div>
                       <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Телефон</label>
-                      <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+7 (___) ___-__-__" className="h-11 rounded-xl" />
+                      <PhoneInput value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} className="h-11 rounded-xl" />
                     </div>
                     <div>
                       <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Email</label>
-                      <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="name@company.ru" className="h-11 rounded-xl" />
+                      <Input type="email" autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="name@company.ru" className="h-11 rounded-xl" />
                     </div>
                     <Textarea
                       value={`Запрос прайс-листа: ${selectedCategory.name}`}

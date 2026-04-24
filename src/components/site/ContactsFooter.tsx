@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { CONTACT_API_URL } from "./data";
+import PhoneInput from "./PhoneInput";
 import { reachGoal, Goals } from "@/lib/metrika";
 
 const ContactsFooter = () => {
@@ -199,6 +200,7 @@ const ContactsFooter = () => {
                     Имя
                   </label>
                   <Input
+                    autoComplete="name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     placeholder="Ваше имя"
@@ -209,12 +211,9 @@ const ContactsFooter = () => {
                   <label className="text-xs uppercase tracking-wider text-muted-foreground mb-2 block">
                     Телефон
                   </label>
-                  <Input
+                  <PhoneInput
                     value={form.phone}
-                    onChange={(e) =>
-                      setForm({ ...form, phone: e.target.value })
-                    }
-                    placeholder="+7 (___) ___-__-__"
+                    onChange={(v) => setForm({ ...form, phone: v })}
                     className="h-12 rounded-xl border-border bg-background"
                   />
                 </div>
@@ -225,6 +224,7 @@ const ContactsFooter = () => {
                 </label>
                 <Input
                   type="email"
+                  autoComplete="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="name@company.ru"

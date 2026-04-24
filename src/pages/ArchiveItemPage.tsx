@@ -11,6 +11,7 @@ import { toast } from '@/hooks/use-toast';
 import { ARCHIVE_API_URL, CONTACT_API_URL } from '@/components/site/data';
 import SiteLogo from '@/components/site/SiteLogo';
 import AdaptiveImage from '@/components/site/AdaptiveImage';
+import PhoneInput from '@/components/site/PhoneInput';
 import useDocumentMeta from '@/hooks/useDocumentMeta';
 
 interface ArchiveItem { slug: string; date: string; title: string; content?: string[]; image?: string; images?: string[] }
@@ -272,15 +273,15 @@ const ArchiveItemPage = () => {
           <form onSubmit={submitRequest} className="space-y-3 pt-2">
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Имя</label>
-              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ваше имя" className="h-11 rounded-xl" />
+              <Input autoFocus autoComplete="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Ваше имя" className="h-11 rounded-xl" />
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Телефон</label>
-              <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+7 (___) ___-__-__" className="h-11 rounded-xl" />
+              <PhoneInput value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} className="h-11 rounded-xl" />
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Email</label>
-              <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="name@company.ru" className="h-11 rounded-xl" />
+              <Input type="email" autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="name@company.ru" className="h-11 rounded-xl" />
             </div>
             <Textarea
               value={item ? `Запрос прайс-листа со страницы архива: ${item.title}` : ''}
