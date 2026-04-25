@@ -59,7 +59,7 @@ const ArchiveItemPage = () => {
       publisher: {
         '@type': 'Organization',
         name: 'Семена Оптом',
-        url: 'https://semena37.ru',
+        url: 'https://semena37.pro',
       },
     } : null,
     jsonLdId: 'archive-article-jsonld',

@@ -4,7 +4,7 @@ from html import escape
 import psycopg2
 
 
-BASE_URL = 'https://semena37.ru'
+BASE_URL = 'https://semena37.pro'
 
 STATIC_URLS = [
     {'loc': '/', 'changefreq': 'weekly', 'priority': '1.0'},

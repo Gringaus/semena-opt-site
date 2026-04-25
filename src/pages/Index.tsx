@@ -19,7 +19,7 @@ const Index = () => {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://semena37.ru/' },
+        { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://semena37.pro/' },
       ],
     },
   });
