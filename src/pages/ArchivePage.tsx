@@ -18,10 +18,22 @@ const ArchivePage = () => {
     ogType: 'website',
     jsonLd: {
       '@context': 'https://schema.org',
-      '@type': 'CollectionPage',
-      name: 'Архив новостей — Семена Оптом',
-      description: 'Архив поступлений, событий и новостей магазина «Семена Оптом».',
-      inLanguage: 'ru-RU',
+      '@graph': [
+        {
+          '@type': 'CollectionPage',
+          name: 'Архив новостей — Семена Оптом',
+          description: 'Архив поступлений, событий и новостей магазина «Семена Оптом».',
+          inLanguage: 'ru-RU',
+          url: 'https://semena37.pro/archive',
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://semena37.pro/' },
+            { '@type': 'ListItem', position: 2, name: 'Архив', item: 'https://semena37.pro/archive' },
+          ],
+        },
+      ],
     },
     jsonLdId: 'archive-page-jsonld',
   });

@@ -50,17 +50,30 @@ const ArchiveItemPage = () => {
     robots: item ? 'index, follow' : 'noindex, follow',
     jsonLd: item ? {
       '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: item.title,
-      description,
-      image: item.image ? [item.image] : undefined,
-      datePublished: item.date,
-      inLanguage: 'ru-RU',
-      publisher: {
-        '@type': 'Organization',
-        name: 'Семена Оптом',
-        url: 'https://semena37.pro',
-      },
+      '@graph': [
+        {
+          '@type': 'Article',
+          headline: item.title,
+          description,
+          image: item.image ? [item.image] : undefined,
+          datePublished: item.date,
+          inLanguage: 'ru-RU',
+          mainEntityOfPage: `https://semena37.pro/archive/${item.slug}`,
+          publisher: {
+            '@type': 'Organization',
+            name: 'Семена Оптом',
+            url: 'https://semena37.pro',
+          },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://semena37.pro/' },
+            { '@type': 'ListItem', position: 2, name: 'Архив', item: 'https://semena37.pro/archive' },
+            { '@type': 'ListItem', position: 3, name: item.title, item: `https://semena37.pro/archive/${item.slug}` },
+          ],
+        },
+      ],
     } : null,
     jsonLdId: 'archive-article-jsonld',
   });

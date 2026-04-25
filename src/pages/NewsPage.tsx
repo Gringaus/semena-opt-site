@@ -46,17 +46,30 @@ const NewsPage = () => {
     robots: item ? 'index, follow' : 'noindex, follow',
     jsonLd: item ? {
       '@context': 'https://schema.org',
-      '@type': 'NewsArticle',
-      headline: item.title,
-      description: item.text,
-      image: item.image ? [item.image] : undefined,
-      datePublished: item.date,
-      inLanguage: 'ru-RU',
-      publisher: {
-        '@type': 'Organization',
-        name: 'Семена Оптом',
-        url: 'https://semena37.pro',
-      },
+      '@graph': [
+        {
+          '@type': 'NewsArticle',
+          headline: item.title,
+          description: item.text,
+          image: item.image ? [item.image] : undefined,
+          datePublished: item.date,
+          inLanguage: 'ru-RU',
+          mainEntityOfPage: `https://semena37.pro/news/${item.slug}`,
+          publisher: {
+            '@type': 'Organization',
+            name: 'Семена Оптом',
+            url: 'https://semena37.pro',
+          },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://semena37.pro/' },
+            { '@type': 'ListItem', position: 2, name: 'Новости', item: 'https://semena37.pro/#news' },
+            { '@type': 'ListItem', position: 3, name: item.title, item: `https://semena37.pro/news/${item.slug}` },
+          ],
+        },
+      ],
     } : null,
     jsonLdId: 'news-article-jsonld',
   });
