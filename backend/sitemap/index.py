@@ -28,14 +28,11 @@ def handler(event, context):
             'body': '',
         }
 
-    urls = []
-    for u in STATIC_URLS:
-        urls.append({
-            'loc': BASE_URL + u['loc'],
-            'changefreq': u['changefreq'],
-            'priority': u['priority'],
-            'lastmod': None,
-        })
+    today = datetime.now(timezone.utc).date().isoformat()
+    news_items = []
+    archive_items = []
+    latest_news_date = None
+    latest_archive_date = None
 
     try:
         conn = psycopg2.connect(os.environ['DATABASE_URL'])
@@ -45,27 +42,57 @@ def handler(event, context):
                     "SELECT slug, created_at FROM news WHERE COALESCE(published, TRUE) = TRUE AND slug IS NOT NULL AND slug <> '' ORDER BY created_at DESC NULLS LAST"
                 )
                 for slug, created_at in cur.fetchall():
-                    urls.append({
+                    iso = _iso_date(created_at)
+                    if iso and (latest_news_date is None or iso > latest_news_date):
+                        latest_news_date = iso
+                    news_items.append({
                         'loc': f'{BASE_URL}/news/{slug}',
                         'changefreq': 'monthly',
                         'priority': '0.7',
-                        'lastmod': _iso_date(created_at),
+                        'lastmod': iso,
                     })
             with conn.cursor() as cur:
                 cur.execute(
                     "SELECT slug, created_at FROM archive WHERE slug IS NOT NULL AND slug <> '' ORDER BY sort_order NULLS LAST, created_at DESC NULLS LAST"
                 )
                 for slug, created_at in cur.fetchall():
-                    urls.append({
+                    iso = _iso_date(created_at)
+                    if iso and (latest_archive_date is None or iso > latest_archive_date):
+                        latest_archive_date = iso
+                    archive_items.append({
                         'loc': f'{BASE_URL}/archive/{slug}',
                         'changefreq': 'yearly',
                         'priority': '0.5',
-                        'lastmod': _iso_date(created_at),
+                        'lastmod': iso,
                     })
         finally:
             conn.close()
     except Exception:
         pass
+
+    home_lastmod = latest_news_date or today
+    archive_lastmod = latest_archive_date or latest_news_date or today
+
+    urls = []
+    for u in STATIC_URLS:
+        loc = u['loc']
+        if loc == '/':
+            lastmod = home_lastmod
+        elif loc == '/archive':
+            lastmod = archive_lastmod
+        elif loc == '/faq':
+            lastmod = today
+        else:
+            lastmod = None
+        urls.append({
+            'loc': BASE_URL + loc,
+            'changefreq': u['changefreq'],
+            'priority': u['priority'],
+            'lastmod': lastmod,
+        })
+
+    urls.extend(news_items)
+    urls.extend(archive_items)
 
     xml = _build_xml(urls)
     return {
