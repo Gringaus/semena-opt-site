@@ -315,7 +315,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
               </div>
               <div className="absolute -top-4 -right-2 sm:-top-6 sm:-right-4 w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-[hsl(var(--lime))] grid place-items-center rotate-12 shadow-xl">
                 <div className="text-center leading-tight">
-                  <div className="font-display text-lg sm:text-2xl font-bold">-15%</div>
+                  <div className="font-display text-lg sm:text-2xl font-bold"></div>
                   <div className="text-[9px] sm:text-[10px] uppercase tracking-wider">
                     ранний опт
                   </div>
