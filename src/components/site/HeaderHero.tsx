@@ -297,7 +297,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground px-0 mx-0 py-0">Доставка </div>
+                      <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground px-0 mx-0 py-0"></div>
                       <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold"></div>
                     </div>
                     <div>
