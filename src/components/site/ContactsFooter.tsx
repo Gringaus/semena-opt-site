@@ -190,7 +190,7 @@ const ContactsFooter = () => {
                   </Button>
                 </a>
                 <a
-                  href="https://2gis.ru/ivanovo/directions/points/%7C40.948929%2C57.006451%3B"
+                  href="https://2gis.ru/ivanovo/search/%D1%83%D0%BB.%20%D0%97%D0%B5%D0%BB%D1%91%D0%BD%D0%B0%D1%8F%2C%2019%D0%92/routeTab/rsType/car/to/40.948929%2C57.006451"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => reachGoal(Goals.RouteClick, { source: '2gis' })}
