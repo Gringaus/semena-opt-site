@@ -289,6 +289,61 @@ const ContactsFooter = () => {
               </div>
             </form>
           </div>
+
+          <div className="mt-14 sm:mt-20 pt-10 sm:pt-14 border-t border-[hsl(var(--cream))]/20">
+            <div className="grid lg:grid-cols-12 gap-6 sm:gap-10 items-start">
+              <div className="lg:col-span-4">
+                <Icon name="Truck" size={28} className="text-[hsl(var(--lime))] mb-4 sm:mb-6" />
+                <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--lime))] mb-2 sm:mb-3">
+                  География поставок
+                </div>
+                <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl leading-[1.05] mb-3 sm:mb-4">
+                  Доставляем семена по Иваново и всей области
+                </h3>
+                <p className="text-sm sm:text-base opacity-70 max-w-sm">
+                  Везём заказы оптовикам, фермерским хозяйствам и магазинам в радиусе 120 км от Иваново.
+                  Отгружаем со склада на ул. Зелёной, 19В — обычно в день оплаты.
+                </p>
+              </div>
+
+              <div className="lg:col-span-8">
+                <div className="text-xs uppercase tracking-wider opacity-60 mb-3 sm:mb-4">
+                  Города обслуживания
+                </div>
+                <ul className="flex flex-wrap gap-2 sm:gap-2.5">
+                  {[
+                    'Иваново',
+                    'Кохма',
+                    'Шуя',
+                    'Тейково',
+                    'Фурманов',
+                    'Вичуга',
+                    'Кинешма',
+                    'Родники',
+                    'Приволжск',
+                    'Заволжск',
+                    'Юрьевец',
+                    'Пучеж',
+                    'Лух',
+                    'Палех',
+                  ].map((city) => (
+                    <li
+                      key={city}
+                      className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[hsl(var(--cream))]/10 border border-[hsl(var(--cream))]/15 text-sm sm:text-base hover:bg-[hsl(var(--cream))]/15 transition-colors"
+                    >
+                      {city}
+                    </li>
+                  ))}
+                  <li className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[hsl(var(--lime))]/15 border border-[hsl(var(--lime))]/30 text-sm sm:text-base text-[hsl(var(--lime))]">
+                    и вся Ивановская область
+                  </li>
+                </ul>
+                <p className="mt-4 sm:mt-5 text-xs sm:text-sm opacity-60">
+                  Не нашли свой город в списке? Позвоните — обсудим условия доставки индивидуально.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
