@@ -15,7 +15,7 @@ interface Meta {
 }
 
 const DEFAULT_TITLE = 'Семена Оптом — оптовый поставщик семян в Иваново | 560+ сортов';
-const DEFAULT_DESCRIPTION = 'Оптовый магазин семян в Иваново: овощные, цветочные и полевые культуры. Более 560 сортов, прямые контракты с селекционными станциями, всхожесть 97%. Доставка по России.';
+const DEFAULT_DESCRIPTION = 'Оптовый магазин семян в Иваново: овощные, цветочные и полевые культуры. Более 560 сортов, прямые контракты с селекционными станциями, всхожесть 97%. Доставка по Иваново и области.';
 
 function ensureMeta(selector: string, create: () => HTMLElement): HTMLElement {
   let el = document.head.querySelector<HTMLElement>(selector);
