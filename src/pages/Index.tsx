@@ -3,23 +3,77 @@ import { Toaster } from '@/components/ui/toaster';
 import HeaderHero from '@/components/site/HeaderHero';
 import ContentSections from '@/components/site/ContentSections';
 import ContactsFooter from '@/components/site/ContactsFooter';
-import { nav } from '@/components/site/data';
+import { nav, catalog as fallbackCatalog, CATALOG_API_URL } from '@/components/site/data';
 import useDocumentMeta from '@/hooks/useDocumentMeta';
+
+type CatalogEntry = { name: string; count?: number; img?: string; items?: string[] | string };
 
 const Index = () => {
   const [active, setActive] = useState('news');
+  const [catalogData, setCatalogData] = useState<CatalogEntry[]>(fallbackCatalog);
   const lockUntilRef = useRef(0);
+
+  useEffect(() => {
+    fetch(CATALOG_API_URL)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.items?.length) setCatalogData(d.items);
+      })
+      .catch(() => {});
+  }, []);
 
   useDocumentMeta({
     title: '',
     description: 'Оптовый магазин семян в Иваново: овощные, цветочные и полевые культуры. Более 560 сортов, прямые контракты с селекционными станциями, всхожесть 97%. Доставка по России. Заявки на сезон 2026.',
     ogType: 'website',
-    jsonLdId: 'home-breadcrumb-jsonld',
+    jsonLdId: 'home-jsonld',
     jsonLd: {
       '@context': 'https://schema.org',
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://semena37.pro/' },
+      '@graph': [
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Главная', item: 'https://semena37.pro/' },
+          ],
+        },
+        {
+          '@type': 'ItemList',
+          '@id': 'https://semena37.pro/#catalog',
+          name: 'Каталог семян оптом',
+          description: 'Информационный каталог категорий семян: овощные, зерновые, масличные, цветочные и декоративные культуры.',
+          numberOfItems: catalogData.length,
+          itemListElement: catalogData.map((c, idx) => {
+            const items = Array.isArray(c.items)
+              ? c.items
+              : typeof c.items === 'string'
+              ? c.items.split(',').map((s) => s.trim()).filter(Boolean)
+              : [];
+            const sortsText = items.length ? `Сорта: ${items.join(', ')}.` : '';
+            const countText = c.count ? `${c.count} сортов в ассортименте. ` : '';
+            return {
+              '@type': 'ListItem',
+              position: idx + 1,
+              item: {
+                '@type': 'Product',
+                '@id': `https://semena37.pro/#catalog-${idx + 1}`,
+                name: c.name,
+                category: c.name,
+                description: `${countText}${sortsText}`.trim() || c.name,
+                image: c.img,
+                brand: { '@type': 'Brand', name: 'Семена Оптом' },
+                url: 'https://semena37.pro/#catalog',
+                offers: {
+                  '@type': 'AggregateOffer',
+                  availability: 'https://schema.org/InStock',
+                  priceCurrency: 'RUB',
+                  offerCount: c.count || items.length || 1,
+                  seller: { '@id': 'https://semena37.pro/#organization' },
+                  url: 'https://semena37.pro/#catalog',
+                },
+              },
+            };
+          }),
+        },
       ],
     },
   });
