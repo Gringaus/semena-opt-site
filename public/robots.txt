@@ -11,4 +11,3 @@ Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content
 
 Host: https://semena37.pro
 Sitemap: https://semena37.pro/sitemap.xml
-Sitemap: https://functions.poehali.dev/54eb78ff-70ff-4192-bb0e-db217ff89b92
