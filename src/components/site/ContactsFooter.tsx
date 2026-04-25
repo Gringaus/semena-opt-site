@@ -173,11 +173,12 @@ const ContactsFooter = () => {
             <div className="mt-4 sm:mt-5 flex flex-col sm:flex-row flex-wrap items-start sm:items-center sm:justify-between gap-3 sm:gap-4">
               <div className="text-sm opacity-70">Приезжайте к нам на склад или закажите доставку по Иванову и области.</div>
               <a
-                href="https://yandex.ru/maps/?rtext=~57.006451,40.948929&rtt=auto"
+                href="https://yandex.ru/maps/?rtext=~57.006451%2C40.948929&rtt=auto&z=16&ll=40.948929%2C57.006451&mode=routes&ruri=~ymapsbm1%3A%2F%2Fgeo%3Fll%3D40.948929%252C57.006451%26text%3D%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D1%8F%252C%2520%D0%98%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%D0%BE%252C%2520%D1%83%D0%BB%D0%B8%D1%86%D0%B0%2520%D0%97%D0%B5%D0%BB%D1%91%D0%BD%D0%B0%D1%8F%252C%252019%D0%92"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => reachGoal(Goals.RouteClick)}
                 className="w-full sm:w-auto"
+                aria-label="Построить маршрут до склада: г. Иваново, ул. Зелёная, 19В"
               >
                 <Button
                   size="lg"
