@@ -300,9 +300,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                       <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
                         Регионов
                       </div>
-                      <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
-                        48
-                      </div>
+                      <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold"></div>
                     </div>
                     <div>
                       <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
