@@ -379,7 +379,7 @@ const ContentSections = () => {
       <section id="about" className="container pb-14 sm:pb-20 lg:pb-32 scroll-mt-20 sm:scroll-mt-24">
         <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] rounded-2xl sm:rounded-[2rem] overflow-hidden">
-            <img src="https://cdn.poehali.dev/projects/6e30ca34-8fe1-4535-8d16-622fe38c58fb/files/576adcb1-4f20-4559-a90a-4201de6ac62a.jpg" alt="Склад" loading="lazy" decoding="async" width={800} height={1000} className="w-full h-full object-cover" />
+            <img src="https://cdn.poehali.dev/projects/6e30ca34-8fe1-4535-8d16-622fe38c58fb/files/576adcb1-4f20-4559-a90a-4201de6ac62a.jpg" alt="Склад семян оптом в Иваново — оптовый поставщик с 20-летним опытом, 560+ сортов в наличии" loading="lazy" decoding="async" width={800} height={1000} className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="text-xs uppercase tracking-[0.25em] text-[hsl(var(--earth))] mb-2 sm:mb-3">05 — О нас</div>

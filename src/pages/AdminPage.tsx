@@ -12,8 +12,10 @@ import NewsAdmin from '@/components/admin/NewsAdmin';
 import ArchiveAdmin from '@/components/admin/ArchiveAdmin';
 import CatalogAdmin from '@/components/admin/CatalogAdmin';
 import AccountAdmin from '@/components/admin/AccountAdmin';
+import useDocumentMeta from '@/hooks/useDocumentMeta';
 
 const AdminPage = () => {
+  useDocumentMeta({ title: 'Администрирование', robots: 'noindex, nofollow' });
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('admin_token'));
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');

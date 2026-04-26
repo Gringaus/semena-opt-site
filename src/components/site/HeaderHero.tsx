@@ -279,7 +279,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
               <div className="aspect-[4/5] sm:aspect-[5/4] lg:aspect-[4/5] rounded-[1.5rem] sm:rounded-[2rem] overflow-hidden relative shadow-2xl">
                 <img
                   src="https://cdn.poehali.dev/projects/6e30ca34-8fe1-4535-8d16-622fe38c58fb/files/a1c310be-a37a-41df-bcbd-1078909d16ec.jpg"
-                  alt="Семена"
+                  alt="Семена оптом от производителя в Иваново — овощные, цветочные и полевые культуры, 560+ сортов"
                   width={800}
                   height={1000}
                   loading="eager"
