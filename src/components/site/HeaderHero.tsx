@@ -293,7 +293,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                         <Icon name="Package" size={12} className="text-primary" />
                         Ассортимент
                       </div>
-                      <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
+                      <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-primary">
                         560+
                       </div>
                     </div>
@@ -302,7 +302,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                         <Icon name="Award" size={12} className="text-primary" />
                         Опыт
                       </div>
-                      <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
+                      <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-primary">
                         20 лет
                       </div>
                     </div>
@@ -311,7 +311,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                         <Icon name="Sprout" size={12} className="text-primary" />
                         Всхожесть
                       </div>
-                      <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
+                      <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-primary">
                         97%
                       </div>
                     </div>
