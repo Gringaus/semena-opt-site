@@ -290,7 +290,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                   <div className="flex items-baseline justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-1 text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
-                        <Icon name="Package" size={12} />
+                        <Icon name="Package" size={12} className="text-primary" />
                         Ассортимент
                       </div>
                       <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
@@ -299,7 +299,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                     </div>
                     <div>
                       <div className="flex items-center gap-1 text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
-                        <Icon name="Award" size={12} />
+                        <Icon name="Award" size={12} className="text-primary" />
                         Опыт
                       </div>
                       <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
@@ -308,7 +308,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                     </div>
                     <div>
                       <div className="flex items-center gap-1 text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
-                        <Icon name="Sprout" size={12} />
+                        <Icon name="Sprout" size={12} className="text-primary" />
                         Всхожесть
                       </div>
                       <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
