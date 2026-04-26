@@ -12,6 +12,7 @@
     <meta name="theme-color" content="#14532d">
     <meta name="author" content="Семена Оптом"/>
     <link rel="canonical" href="https://semena37.pro/">
+    <link rel="manifest" href="/manifest.webmanifest">
     <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/9MZQsVfv/logo-opt.jpg">
     <link rel="shortcut icon" type="image/jpeg" href="https://i.postimg.cc/9MZQsVfv/logo-opt.jpg">
     <link rel="apple-touch-icon" href="https://i.postimg.cc/9MZQsVfv/logo-opt.jpg">
@@ -139,6 +140,13 @@
 <body>
 <div id="root"></div>
 <script type="module" src="/src/main.tsx"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function () {});
+    });
+  }
+</script>
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">

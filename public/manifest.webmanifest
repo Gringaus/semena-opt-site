@@ -1,0 +1,26 @@
+{
+  "name": "Семена Оптом — Иваново",
+  "short_name": "Семена Оптом",
+  "description": "Оптовый поставщик семян овощных, цветочных и полевых культур. 560+ сортов, доставка по городу Иваново и области.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#14532d",
+  "background_color": "#fdf8ee",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/9MZQsVfv/logo-opt.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "https://i.postimg.cc/9MZQsVfv/logo-opt.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
