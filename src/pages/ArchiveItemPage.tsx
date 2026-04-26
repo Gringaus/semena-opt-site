@@ -19,7 +19,7 @@ interface ArchiveItem { slug: string; date: string; title: string; content?: str
 
 const ArchiveItemPage = () => {
   const { slug } = useParams();
-  const [archive, setArchive] = useState<ArchiveItem[]>([]);
+  const [item, setItem] = useState<ArchiveItem | undefined>(undefined);
   const [loaded, setLoaded] = useState(false);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const [requestOpen, setRequestOpen] = useState(false);
@@ -29,16 +29,16 @@ const ArchiveItemPage = () => {
   const sendingRef = useRef(false);
 
   useEffect(() => {
+    if (!slug) { setLoaded(true); return; }
     let cancelled = false;
-    fetch(ARCHIVE_API_URL)
-      .then((r) => r.json())
-      .then((d) => { if (!cancelled) setArchive(Array.isArray(d.items) ? d.items : []); })
-      .catch(() => { if (!cancelled) setArchive([]); })
+    fetch(`${ARCHIVE_API_URL}${ARCHIVE_API_URL.includes('?') ? '&' : '?'}slug=${encodeURIComponent(slug)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (!cancelled && d?.item) setItem(d.item); })
+      .catch(() => {})
       .finally(() => { if (!cancelled) setLoaded(true); });
     return () => { cancelled = true; };
-  }, []);
+  }, [slug]);
 
-  const item = archive.find((a) => a.slug === slug);
   const gallery = item?.images || [];
   const description = item?.content?.[0]?.slice(0, 180) || 'Запись из архива магазина «Семена Оптом».';
 
