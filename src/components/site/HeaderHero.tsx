@@ -260,15 +260,16 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                 Сезон 2026 открыт
               </Badge>
               <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-8xl leading-[0.95] tracking-tight text-balance">
-                Семена, <br />
+                Семена оптом <br />
                 <em className="text-[hsl(var(--earth))]">
-                  которые прорастают
+                  от производителя
                 </em>{" "}
-                <br />в урожай.
+                <br />в Иваново.
               </h1>
               <p className="mt-5 sm:mt-8 text-base sm:text-lg text-muted-foreground max-w-xl">
-                Оптовый поставщик семян овощных, цветочных и полевых культур.
-                Более 560 позиций, прямые контракты с селекционными станциями.
+                Оптовый поставщик семян овощей, цветов и газонной травы. Семена
+                полевых культур напрямую от селекционных станций — 560+ сортов,
+                всхожесть 97%, доставка по России.
               </p>
             </div>
             <div
