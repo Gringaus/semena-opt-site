@@ -269,7 +269,7 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
               <p className="mt-5 sm:mt-8 text-base sm:text-lg text-muted-foreground max-w-xl">
                 Оптовый поставщик семян овощей, цветов и газонной травы. Семена
                 полевых культур напрямую от селекционных станций — 560+ сортов,
-                всхожесть 97%, доставка по России.
+                всхожесть 97%, доставка по городу Иваново и области.
               </p>
             </div>
             <div
