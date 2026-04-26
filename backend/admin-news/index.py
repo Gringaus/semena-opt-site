@@ -28,6 +28,41 @@ def handler(event, context):
     conn = psycopg2.connect(os.environ['DATABASE_URL'])
     try:
         if method == 'GET':
+            slug_q = (qs.get('slug') if qs else None) or ''
+            if slug_q:
+                table = 'archive' if kind == 'archive' else 'news'
+                with conn.cursor() as cur:
+                    if table == 'archive':
+                        cur.execute(
+                            "SELECT id, slug, date_label, title, content, image, sort_order, images FROM archive WHERE slug=%s LIMIT 1",
+                            (slug_q,),
+                        )
+                        row = cur.fetchone()
+                        if not row:
+                            return _json(404, {'error': 'not found'})
+                        data = {
+                            'id': row[0], 'slug': row[1], 'date': row[2], 'title': row[3],
+                            'content': [p for p in (row[4] or '').split('\n\n') if p.strip()],
+                            'image': row[5], 'sort': row[6],
+                            'images': row[7] or [],
+                        }
+                    else:
+                        cur.execute(
+                            "SELECT id, slug, date_label, tag, title, text, content, image, published, images FROM news WHERE slug=%s LIMIT 1",
+                            (slug_q,),
+                        )
+                        row = cur.fetchone()
+                        if not row:
+                            return _json(404, {'error': 'not found'})
+                        data = {
+                            'id': row[0], 'slug': row[1], 'date': row[2], 'tag': row[3],
+                            'title': row[4], 'text': row[5],
+                            'content': [p for p in (row[6] or '').split('\n\n') if p.strip()],
+                            'image': row[7], 'published': row[8],
+                            'images': row[9] or [],
+                        }
+                return _json(200, {'item': data})
+
             if kind == 'archive':
                 with conn.cursor() as cur:
                     cur.execute(

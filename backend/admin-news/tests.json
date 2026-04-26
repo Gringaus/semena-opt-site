@@ -24,6 +24,12 @@
       "method": "GET",
       "path": "/?kind=archive",
       "expectedStatus": 200
+    },
+    {
+      "name": "Новость по slug — не найдена",
+      "method": "GET",
+      "path": "/?slug=nonexistent-news-slug-xyz-12345",
+      "expectedStatus": 404
     }
   ]
 }

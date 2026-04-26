@@ -20,7 +20,9 @@ interface NewsItem { slug: string; date: string; tag: string; title: string; tex
 
 const NewsPage = () => {
   const { slug } = useParams();
-  const [items, setItems] = useState<NewsItem[]>(newsFallback);
+  const fallbackItem = newsFallback.find((n) => n.slug === slug);
+  const [item, setItem] = useState<NewsItem | undefined>(fallbackItem);
+  const [loaded, setLoaded] = useState<boolean>(!!fallbackItem);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const [requestOpen, setRequestOpen] = useState(false);
   const [form, setForm] = useState({ name: '', phone: '', email: '' });
@@ -29,13 +31,19 @@ const NewsPage = () => {
   const sendingRef = useRef(false);
 
   useEffect(() => {
-    fetch(NEWS_API_URL)
-      .then((r) => r.json())
-      .then((d) => { if (d.items?.length) setItems(d.items); })
-      .catch(() => {});
-  }, []);
+    if (!slug) return;
+    let cancelled = false;
+    fetch(`${NEWS_API_URL}?slug=${encodeURIComponent(slug)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (cancelled) return;
+        if (d?.item) setItem(d.item);
+        setLoaded(true);
+      })
+      .catch(() => { if (!cancelled) setLoaded(true); });
+    return () => { cancelled = true; };
+  }, [slug]);
 
-  const item = items.find((n) => n.slug === slug);
   const gallery = item?.images || [];
 
   useDocumentMeta({
@@ -155,7 +163,11 @@ const NewsPage = () => {
       </header>
 
       <main>
-      {!item ? (
+      {!item && !loaded ? (
+        <section className="container py-16 sm:py-24 lg:py-32 text-center">
+          <div className="animate-pulse text-muted-foreground">Загружаем новость…</div>
+        </section>
+      ) : !item ? (
         <section className="container py-16 sm:py-24 lg:py-32 text-center">
           <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl mb-4 sm:mb-6">Новость не найдена</h1>
           <p className="text-muted-foreground mb-6 sm:mb-8">Возможно, запись была удалена или перемещена в архив.</p>
