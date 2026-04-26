@@ -61,7 +61,7 @@ def handler(event, context):
                             'image': row[7], 'published': row[8],
                             'images': row[9] or [],
                         }
-                return _json(200, {'item': data})
+                return _json(200, {'item': data}, cache_seconds=300)
 
             if kind == 'archive':
                 with conn.cursor() as cur:
@@ -322,9 +322,12 @@ def _slugify(title):
     return out or f'item-{int(datetime.utcnow().timestamp())}'
 
 
-def _json(status, data):
+def _json(status, data, cache_seconds=0):
+    headers = {**CORS_HEADERS, 'Content-Type': 'application/json'}
+    if cache_seconds and cache_seconds > 0:
+        headers['Cache-Control'] = f'public, max-age={cache_seconds}, s-maxage={cache_seconds}'
     return {
         'statusCode': status,
-        'headers': {**CORS_HEADERS, 'Content-Type': 'application/json'},
+        'headers': headers,
         'body': json.dumps(data, ensure_ascii=False),
     }
