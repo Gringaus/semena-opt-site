@@ -289,7 +289,8 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                 <div className="absolute bottom-3 left-3 right-3 sm:bottom-6 sm:left-6 sm:right-6 bg-background/95 backdrop-blur rounded-xl sm:rounded-2xl p-3 sm:p-5">
                   <div className="flex items-baseline justify-between gap-2">
                     <div>
-                      <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
+                      <div className="flex items-center gap-1 text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
+                        <Icon name="Package" size={12} />
                         Ассортимент
                       </div>
                       <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
@@ -297,7 +298,8 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
+                      <div className="flex items-center gap-1 text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
+                        <Icon name="Award" size={12} />
                         Опыт
                       </div>
                       <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
@@ -305,7 +307,8 @@ const HeaderHero = ({ active, scroll }: HeaderHeroProps) => {
                       </div>
                     </div>
                     <div>
-                      <div className="text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
+                      <div className="flex items-center gap-1 text-[9px] sm:text-[10px] uppercase tracking-wider text-muted-foreground">
+                        <Icon name="Sprout" size={12} />
                         Всхожесть
                       </div>
                       <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold">
