@@ -1,10 +1,46 @@
 import json
 import os
 import re
+import io
 import base64
 from datetime import datetime
 import psycopg2
 import boto3
+
+try:
+    from PIL import Image
+    _PIL_OK = True
+except Exception:
+    _PIL_OK = False
+
+
+def _to_webp(raw_bytes, max_side=1600, quality=82):
+    """Конвертирует изображение в WebP с ресайзом. При неудаче возвращает (None, None)."""
+    if not _PIL_OK:
+        return None, None
+    try:
+        img = Image.open(io.BytesIO(raw_bytes))
+        if img.mode in ('RGBA', 'LA', 'P'):
+            img = img.convert('RGBA')
+            bg = Image.new('RGBA', img.size, (255, 255, 255, 255))
+            bg.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
+            img = bg.convert('RGB')
+        elif img.mode != 'RGB':
+            img = img.convert('RGB')
+        w, h = img.size
+        if max(w, h) > max_side:
+            if w >= h:
+                new_w = max_side
+                new_h = int(h * (max_side / w))
+            else:
+                new_h = max_side
+                new_w = int(w * (max_side / h))
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format='WEBP', quality=quality, method=6)
+        return buf.getvalue(), 'image/webp'
+    except Exception:
+        return None, None
 
 CORS_HEADERS = {
     'Access-Control-Allow-Origin': '*',
@@ -239,9 +275,14 @@ def _resolve_img(body, kind):
     if img_b64:
         filename = body.get('imageFilename') or f'{kind}.jpg'
         safe_name = re.sub(r'[^A-Za-z0-9._-]+', '_', filename)
-        key = f'{kind}/{int(datetime.utcnow().timestamp())}_{safe_name}'
         raw = base64.b64decode(img_b64)
         ctype = body.get('imageContentType') or _guess_ct(safe_name)
+        webp_bytes, webp_ct = _to_webp(raw)
+        if webp_bytes and webp_ct:
+            raw = webp_bytes
+            ctype = webp_ct
+            safe_name = re.sub(r'\.[^.]+$', '', safe_name) + '.webp'
+        key = f'{kind}/{int(datetime.utcnow().timestamp())}_{safe_name}'
         s3 = boto3.client(
             's3',
             endpoint_url='https://bucket.poehali.dev',
@@ -277,9 +318,14 @@ def _resolve_images(body, kind):
                 continue
             filename = u.get('filename') or f'{kind}_{idx}.jpg'
             safe_name = re.sub(r'[^A-Za-z0-9._-]+', '_', filename)
-            key = f'{kind}/{int(datetime.utcnow().timestamp())}_{idx}_{safe_name}'
             raw = base64.b64decode(b64)
             ctype = u.get('contentType') or _guess_ct(safe_name)
+            webp_bytes, webp_ct = _to_webp(raw)
+            if webp_bytes and webp_ct:
+                raw = webp_bytes
+                ctype = webp_ct
+                safe_name = re.sub(r'\.[^.]+$', '', safe_name) + '.webp'
+            key = f'{kind}/{int(datetime.utcnow().timestamp())}_{idx}_{safe_name}'
             s3.put_object(Bucket='files', Key=key, Body=raw, ContentType=ctype)
             result.append(f"https://cdn.poehali.dev/projects/{os.environ['AWS_ACCESS_KEY_ID']}/bucket/{key}")
     return result
